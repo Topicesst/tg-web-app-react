@@ -1,15 +1,23 @@
 import React, { useEffect } from 'react';
-import { useTelegram } from 'telegram-hook-library';
+import useTelegramAuth from '@use-telegram-auth/hook';
 
 function App() {
-    const { onToggleButton, tg } = useTelegram();
+    const { login, logout, isAuthenticated, user } = useTelegramAuth();
 
     useEffect(() => {
-        tg.ready();
-    }, []);
+        // Додаткові дії після входу або виходу користувача
+    }, [isAuthenticated, user]);
+
     return (
         <div className="App">
-            <button onClick={onToggleButton}>Toggle</button>
+            {isAuthenticated ? (
+                <div>
+                    <p>Ви увійшли як {user.name}</p>
+                    <button onClick={logout}>Вийти</button>
+                </div>
+            ) : (
+                <button onClick={login}>Увійти через Telegram</button>
+            )}
         </div>
     );
 }
