@@ -1,10 +1,14 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+body{
+  background-color: rgb(19, 19, 52);
+  color: #fff;
 }
 
-body {
-  background: var(--tg-theme-bg-color);
-  color: var(--tg-theme-text-color);
+.cards__container{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.heading{
+  text-align: center;
 }
