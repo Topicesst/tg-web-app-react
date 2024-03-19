@@ -33,6 +33,14 @@
     text-align: center; /* Вирівнювання тексту по центру */
 }
 
+/* Стилі для виділення головного слова в назві товару */
+.title span.highlighted {
+    text-decoration: underline; /* Підкреслення */
+    font-weight: bold; /* Жирний шрифт */
+    color: var(--primary-color); /* Колір тексту */
+}
+
+
 /* Стилі для опису товару */
 .description {
     font-size: 0.7em; /* Зменшення розміру шрифту */
