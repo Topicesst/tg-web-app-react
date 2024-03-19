@@ -51,6 +51,7 @@
     border-radius: 5px; /* Округлення кутів кнопки */
     background-color: rgba(var(--tg-theme-button-color-rgb), 0.15); /* Напівпрозорий фон з кольором змінної --tg-theme-button-color */
     padding: 10px; /* Встановлення внутрішніх відступів */
-    color: var(--tg-theme-button-color); /* Колір тексту */
+    color: white; /* Колір тексту білий */
 }
+
 
