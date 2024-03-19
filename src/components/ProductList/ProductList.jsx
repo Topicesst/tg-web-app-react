@@ -3,17 +3,25 @@ import './ProductList.css';
 import ProductItem from "../ProductItem/ProductItem";
 import {useTelegram} from "../../hooks/useTelegram";
 import {useCallback, useEffect} from "react";
-import burgerImg from "../../images/burger.png";
+import burgerImg from "../images/burger.png";
+import pizzaImg from "../images/pizza.png";
+import kebabImg from "../images/kebab.png";
+import saladImg from "../images/salad.png";
+import icecreamImg from "../images/icecream.png";
+import icecream1Img from "../images/icecream1.png";
+import cocaImg from "../images/coca.png";
+import waterImg from "../images/water.png";
+
 
 const products = [
     {id: '1', title: 'Гамбургер', price: 130, description: <i>Класичний з зеленню</i>, Image: burgerImg },
-    {id: '2', title: 'Піца', price: 220, description: <i>Сирна з ковбасками</i>},
-    {id: '3', title: 'Кебаб', price: 160, description: <i>Курячий в солодкому соусі</i>},
-    {id: '4', title: 'Салат Цезар', price: 150, description: <i>слово</i>},
-    {id: '5', title: 'Морозиво в ріжку', price: 60, description: <i>Малинове</i>},
-    {id: '6', title: 'Морозиво в стаканчику', price: 85, description: <i>Смородинове</i>},
-    {id: '7', title: 'Пляшка коли', price: 35, description: <i>Газований солодкий напій</i>},
-    {id: '8', title: 'Пляшка води', price: 25, description: <i>Газований напій</i>},
+    {id: '2', title: 'Піца', price: 220, description: <i>Сирна з ковбасками</i>, Image: pizzaImg },
+    {id: '3', title: 'Кебаб', price: 160, description: <i>Курячий в солодкому соусі</i>, Image: kebabImg },
+    {id: '4', title: 'Салат Цезар', price: 150, description: <i>слово</i>, Image: saladImg },
+    {id: '5', title: 'Морозиво в ріжку', price: 60, description: <i>Малинове</i>, Image: icecreamImg },
+    {id: '6', title: 'Морозиво в стаканчику', price: 85, description: <i>Смородинове</i>, Image: icecream1Img },
+    {id: '7', title: 'Пляшка коли', price: 35, description: <i>Газований солодкий напій</i>, Image: cocaImg },
+    {id: '8', title: 'Пляшка води', price: 25, description: <i>Газований напій</i>, Image: waterImg },
 ]
 
 const getTotalPrice = (items = []) => {
