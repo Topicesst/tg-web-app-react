@@ -46,7 +46,7 @@
 /* Стилі для опису товару */
 .description {
     font-size: 0.7em; /* Зменшення розміру шрифту */
-    text-align: center; /* Вирівнювання тексту по центру */
+    margin-bottom: 10px; /* Відступ між заголовком і ціною */
 }
 
 
@@ -63,4 +63,22 @@
     background-color: green;
 }
 
+.product {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 170px;
+    border: 1px solid var(--tg-theme-button-color);
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px; /* Відступ між карточками товарів */
+}
 
+.product .description {
+    margin-bottom: 10px; /* Відступ між заголовком і ціною */
+    text-align: center;
+}
+
+.price {
+    text-align: center; /* Вирівнювання тексту по центру */
+}
