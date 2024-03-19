@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from "../Button/Button";
 import './ProductItem.css';
 
-const ProductItem = ({product, className, onAdd}) => {
+const ProductItem = ({ product, className, onAdd }) => {
+    const [isAdded, setIsAdded] = useState(false); // Додавання стану для відстеження доданого товару
 
     const onAddHandler = () => {
         onAdd(product);
+        setIsAdded(!isAdded); // Зміна стану при натисканні кнопки
     }
 
     return (
@@ -16,8 +18,8 @@ const ProductItem = ({product, className, onAdd}) => {
             <div className={'price'}>
                 <span>Ціна: <b>{product.price}₴</b></span>
             </div>
-            <Button className={'add-btn'} onClick={onAddHandler}>
-                Додати в кошик
+            <Button className={`add-btn ${isAdded ? 'added' : ''}`} onClick={onAddHandler}>
+                {isAdded ? 'Додано' : 'Додати в кошик'}
             </Button>
         </div>
     );

@@ -59,5 +59,7 @@
     color: white; /* Колір тексту білий */
     font-weight: bold; /* Товщина шрифту жирна */
 }
-
+.added {
+    background-color: green;
+}
 
