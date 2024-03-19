@@ -4,8 +4,12 @@
     display: flex;
     align-items: center;
     padding: 0 20px;
-}
-
-.username {
-    margin-left: auto;
+    background-color: #ffffff; /* Білий фон */
+    justify-content: center; /* Вирівнювання по центру */
+    position: sticky; /* Зробити заголовок прилипаючим */
+    top: 0; /* Розташування зверху */
+    z-index: 1000; /* Встановлюємо велике значення z-index, щоб забезпечити, що заголовок завжди буде наверху */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тінь для ефекту піднятості */
+    font-weight: bold; /* жирний шрифт */
+    font-size: 2.0em; /* більший розмір шрифту */
 }
