@@ -53,6 +53,23 @@ const Form = () => {
     return (
         <div className={"form"}>
             <h3>Введіть ваші дані:</h3>
+
+            <input
+                className={'input'}
+                type="text"
+                placeholder={'ФІО'}
+                value={name}
+                onChange={onChangeCountry}
+            />
+
+            <input
+                className={'input'}
+                type="text"
+                placeholder={'Номер телефону'}
+                value={numberphone}
+                onChange={onChangeCountry}
+            />
+
             <input
                 className={'input'}
                 type="text"
