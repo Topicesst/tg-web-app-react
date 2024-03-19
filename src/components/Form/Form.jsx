@@ -1,21 +1,25 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './Form.css';
-import {useTelegram} from "../../hooks/useTelegram";
+import { useTelegram } from "../../hooks/useTelegram";
 
 const Form = () => {
+    const [name, setName] = useState(''); // Оголошення змінної для імені
+    const [numberphone, setNumberPhone] = useState(''); // Оголошення змінної для номеру телефону
     const [country, setCountry] = useState('');
     const [street, setStreet] = useState('');
     const [subject, setSubject] = useState('physical');
-    const {tg} = useTelegram();
+    const { tg } = useTelegram();
 
     const onSendData = useCallback(() => {
         const data = {
+            name,
+            numberphone,
             country,
             street,
             subject
         }
         tg.sendData(JSON.stringify(data));
-    }, [country, street, subject])
+    }, [name, numberphone, country, street, subject]);
 
     useEffect(() => {
         tg.onEvent('mainButtonClicked', onSendData)
@@ -31,12 +35,20 @@ const Form = () => {
     }, [])
 
     useEffect(() => {
-        if(!street || !country) {
+        if (!street || !country || !name || !numberphone) {
             tg.MainButton.hide();
         } else {
             tg.MainButton.show();
         }
-    }, [country, street])
+    }, [country, street, name, numberphone])
+
+    const onChangeName = (e) => {
+        setName(e.target.value)
+    }
+
+    const onChangeNumberPhone = (e) => {
+        setNumberPhone(e.target.value)
+    }
 
     const onChangeCountry = (e) => {
         setCountry(e.target.value)
@@ -53,23 +65,20 @@ const Form = () => {
     return (
         <div className={"form"}>
             <h3>Введіть ваші дані:</h3>
-
             <input
                 className={'input'}
                 type="text"
-                placeholder={'ФІО'}
+                placeholder={'ПІБ'}
                 value={name}
-                onChange={onChangeCountry}
+                onChange={onChangeName}
             />
-
             <input
                 className={'input'}
                 type="text"
                 placeholder={'Номер телефону'}
                 value={numberphone}
-                onChange={onChangeCountry}
+                onChange={onChangeNumberPhone}
             />
-
             <input
                 className={'input'}
                 type="text"
