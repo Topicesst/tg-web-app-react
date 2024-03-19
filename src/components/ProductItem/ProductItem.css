@@ -1,24 +1,40 @@
+/* Встановлення основного кольору для використання відповідно до змінної --primary-color */
+:root {
+    --primary-color: var(--tg-theme-button-color);
+}
+
+/* Стилі для карточки товару */
 .product {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid var(--tg-theme-button-color);
-    padding: 15px;
-    width: 170px;
+    display: flex; /* Встановлення відображення карточки як блоку */
+    flex-direction: column; /* Встановлення напрямку відображення елементів у стовпчик */
+    justify-content: space-between; /* Вирівнювання елементів по вертикалі */
+    width: 170px; /* Встановлення ширини карточки */
+    border: 1px solid var(--tg-theme-button-color); /* Встановлення межі з кольором змінної --tg-theme-button-color */
+    padding: 15px; /* Встановлення внутрішніх відступів */
 }
 
-
+/* Стилі для контейнера зображення товару */
 .img {
-    width: 100%;
-    background: lightgray;
-    height: 100px;
-    margin: 0 auto;
-    background: var(--tg-theme-button-color);
+    width: 100%; /* Заповнення всієї ширини контейнера */
+    height: 100px; /* Встановлення висоти контейнера */
+    margin: 0 auto; /* Вирівнювання по центру */
+    background: var(--primary-color); /* Фоновий колір контейнера */
 }
 
+/* Стилі для фото товару */
+.img img {
+    width: 100%; /* Заповнення всієї ширини контейнера */
+    height: 100%; /* Заповнення всієї висоти контейнера */
+    object-fit: contain; /* Зображення повністю поміщається в контейнер */
+}
+
+
+/* Стилі для опису товару */
 .description {
-    font-size: 0.8em;
+    font-size: 0.8em; /* Розмір шрифту */
 }
 
+/* Стилі для кнопки "Додати в корзину" */
 .add-btn {
-    width: 100%;
+    width: 100%; /* Заповнення всієї ширини */
 }
