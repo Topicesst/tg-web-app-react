@@ -44,12 +44,6 @@
     font-size: 0.7em; /* Зменшення розміру шрифту */
 }
 
-/* Новий клас для кнопки "Додати в корзину" з обведенням */
-.add-btn {
-    border: 1px solid var(--tg-theme-button-color); /* Обведення з кольором змінної --tg-theme-button-color */
-    background-color: rgba(var(--tg-theme-button-color-rgb), 0.15); /* Прозорий фон з кольором змінної --tg-theme-button-color */
-}
-
 /* Стилі для кнопки "Додати в корзину" */
 .add-btn {
     width: 100%; /* Заповнення всієї ширини */
