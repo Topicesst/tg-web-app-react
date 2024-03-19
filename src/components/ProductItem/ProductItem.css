@@ -44,21 +44,14 @@
     font-size: 0.7em; /* Зменшення розміру шрифту */
 }
 
+/* Новий клас для кнопки "Додати в корзину" з обведенням */
+.add-btn {
+    border: 1px solid var(--tg-theme-button-color); /* Обведення з кольором змінної --tg-theme-button-color */
+    background-color: rgba(var(--tg-theme-button-color-rgb), 0.15); /* Прозорий фон з кольором змінної --tg-theme-button-color */
+}
+
 /* Стилі для кнопки "Додати в корзину" */
 .add-btn {
     width: 100%; /* Заповнення всієї ширини */
     border-radius: 5px; /* Округлення кутів кнопки */
-    background-color: var(--primary-color); /* Колір фону кнопки */
-    border: none; /* Видалення межі */
-    padding: 10px; /* Встановлення внутрішніх відступів */
-    color: rgba(255, 255, 255, 0.7); /* Колір тексту з прозорістю */
-    transition: background-color 0.3s; /* Анімація зміни кольору фону */
-}
-
-.add-btn:hover {
-    background-color: var(--primary-color); /* Колір фону кнопки при наведенні курсору */
-}
-
-.add-btn:active {
-    background-color: var(--primary-color); /* Колір фону кнопки при натисканні */
 }
