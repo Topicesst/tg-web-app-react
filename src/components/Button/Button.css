@@ -1,16 +1,8 @@
-/* Стилі для кнопки */
 .button {
-    background-color: #007bff; /* Колір фону кнопки */
-    color: #fff; /* Колір тексту кнопки */
-    border: none; /* Відсутність межі */
-    padding: 10px 15px; /* Внутрішні відступи */
-    font-size: 16px; /* Розмір шрифту */
-    cursor: pointer; /* Зміна курсору при наведенні */
-    border-radius: 5px; /* Округлення кутів */
-}
-
-/* Стилі для відключеної кнопки */
-.button:disabled {
-    background-color: #ccc; /* Колір фону відключеної кнопки */
-    cursor: not-allowed; /* Зміна курсору на not-allowed */
+    padding: 10px 15px;
+    background: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+    border: none;
+    outline: none;
+    cursor: pointer;
 }
