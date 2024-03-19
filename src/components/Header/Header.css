@@ -10,8 +10,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100px; /* Наприклад, задайте висоту вашого заголовка */
+    height: 60px; /* Зменшуємо висоту заголовка до 80px */
+    margin-bottom: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background-color:  rgba(82, 136, 193, 0.2);
+    background-color: rgba(82, 136, 193, 0.2);
     color: white;
+    font-size: 1.2em; /* Опціонально, збільшуємо розмір шрифту */
 }
