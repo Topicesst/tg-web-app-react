@@ -51,5 +51,8 @@
     border-radius: 5px; /* Округлення кутів кнопки */
     background-color: rgba(82, 136, 193, 0.2); /* Прозорий фон з кольором rgba(82, 136, 193, 255) */
     border: 1px solid var(--tg-theme-button-color); /* Обводка з таким самим кольором і товщиною, як у карточок */
+    color: white; /* Колір тексту білий */
+    font-weight: bold; /* Товщина шрифту жирна */
 }
+
 
