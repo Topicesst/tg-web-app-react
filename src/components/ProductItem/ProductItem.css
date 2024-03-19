@@ -47,7 +47,10 @@
 /* Стилі для кнопки "Додати в корзину" */
 .add-btn {
     width: 100%; /* Заповнення всієї ширини */
-    border: 1px solid var(--tg-theme-button-color); /* Тонкий обводка з кольором змінної --tg-theme-button-color */
+    border: 1px solid var(--tg-theme-button-color); /* Тонка обводка з кольором змінної --tg-theme-button-color */
     border-radius: 5px; /* Округлення кутів кнопки */
-    background-color: rgba(var(--tg-theme-button-color-rgb), 0.5); /* Напівпрозорий фон з кольором змінної --tg-theme-button-color */
+    background-color: rgba(var(--tg-theme-button-color-rgb), 0.15); /* Напівпрозорий фон з кольором змінної --tg-theme-button-color */
+    padding: 10px; /* Встановлення внутрішніх відступів */
+    color: var(--tg-theme-button-color); /* Колір тексту */
 }
+
