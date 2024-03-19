@@ -48,4 +48,17 @@
 .add-btn {
     width: 100%; /* Заповнення всієї ширини */
     border-radius: 5px; /* Округлення кутів кнопки */
+    background-color: var(--primary-color); /* Колір фону кнопки */
+    border: none; /* Видалення межі */
+    padding: 10px; /* Встановлення внутрішніх відступів */
+    color: rgba(255, 255, 255, 0.7); /* Колір тексту з прозорістю */
+    transition: background-color 0.3s; /* Анімація зміни кольору фону */
+}
+
+.add-btn:hover {
+    background-color: var(--primary-color); /* Колір фону кнопки при наведенні курсору */
+}
+
+.add-btn:active {
+    background-color: var(--primary-color); /* Колір фону кнопки при натисканні */
 }
