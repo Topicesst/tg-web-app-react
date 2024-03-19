@@ -1,10 +1,24 @@
 import React from 'react';
 import './Button.css';
 
-const Button = (props) => {
-    return (
-        <button {...props} className={'button ' + props.className}/>
-    );
-};
+// Компонент кнопки, який приймає тип, стан відключення та обробник кліків
+function Button({ type, disable, onClick, className }) {
+    let symbol; // Символ для кнопки
+    if (type === 'add') {
+        symbol = '+';
+    } else if (type === 'remove') {
+        symbol = '-';
+    }
 
-export default Button;
+    return (
+        <button
+            className={`button ${className}`} // Додає клас "button" та переданий клас з props
+            disabled={disable} // Встановлює стан відключення кнопки
+            onClick={onClick} // Встановлює обробник кліків на кнопці
+        >
+            {symbol} {/* Відображає символ "+" або "-" */}
+        </button>
+    );
+}
+
+export default Button; // Експортує компонент Button
