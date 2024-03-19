@@ -14,14 +14,14 @@ import waterImg from "../images/water.png";
 
 
 const products = [
-    {id: '1', title: 'Гамбургер', price: 130, description: <i>Класичний з зеленню</i>, Image: burgerImg },
-    {id: '2', title: 'Піца', price: 220, description: <i>Сирна з ковбасками</i>, Image: pizzaImg },
-    {id: '3', title: 'Кебаб', price: 160, description: <i>Курячий в солодкому соусі</i>, Image: kebabImg },
-    {id: '4', title: 'Салат Цезар', price: 150, description: <i>слово</i>, Image: saladImg },
-    {id: '5', title: 'Морозиво в ріжку', price: 60, description: <i>Малинове</i>, Image: icecreamImg },
-    {id: '6', title: 'Морозиво в стаканчику', price: 85, description: <i>Смородинове</i>, Image: icecream1Img },
-    {id: '7', title: 'Пляшка коли', price: 35, description: <i>Газований солодкий напій</i>, Image: cocaImg },
-    {id: '8', title: 'Пляшка води', price: 25, description: <i>Газований напій</i>, Image: waterImg },
+    {id: '1', title: 'Гамбургер', price: 130, description: <i>(Класичний з зеленню)</i>, Image: burgerImg },
+    {id: '2', title: 'Піца', price: 220, description: <i>(Сирна з ковбасками)</i>, Image: pizzaImg },
+    {id: '3', title: 'Кебаб', price: 160, description: <i>(Курячий в солодкому соусі)</i>, Image: kebabImg },
+    {id: '4', title: 'Салат "Цезар"', price: 150, description: <i>(Овочевий з сиром "Фета")</i>, Image: saladImg },
+    {id: '5', title: 'Морозиво в ріжку', price: 60, description: <i>(Малиновий смак)</i>, Image: icecreamImg },
+    {id: '6', title: 'Морозиво в стаканчику', price: 85, description: <i>(Смородиновий смак)</i>, Image: icecream1Img },
+    {id: '7', title: 'Пляшка "Coca-Cola"', price: 35, description: <i>(Газований солодкий напій)</i>, Image: cocaImg },
+    {id: '8', title: 'Пляшка води', price: 25, description: <i>(Газований напій)</i>, Image: waterImg },
 ]
 
 const getTotalPrice = (items = []) => {
