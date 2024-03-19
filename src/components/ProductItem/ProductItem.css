@@ -1,6 +1,6 @@
 /* Встановлення основного кольору для використання відповідно до змінної --primary-color */
 :root {
-    --primary-color: var(--tg-theme-button-color);
+    --primary-color:;
 }
 
 /* Стилі для карточки товару */
