@@ -40,14 +40,13 @@ const ProductList = () => {
             totalPrice: getTotalPrice(addedItems),
             queryId,
         }
-        fetch('https://tg-webapp-bot-e9ad64e44a17.herokuapp.com/web-data', {
+        fetch('http://35.160.120.126/web-data', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data)
         })
-
     }, [addedItems])
 
     useEffect(() => {
