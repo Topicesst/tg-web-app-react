@@ -40,7 +40,7 @@ const ProductList = () => {
             totalPrice: getTotalPrice(addedItems),
             queryId,
         }
-        fetch('http://172.18.210.178/web-data', {
+        fetch('https://tg-webapp-bot-e9ad64e44a17.herokuapp.com//web-data', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
