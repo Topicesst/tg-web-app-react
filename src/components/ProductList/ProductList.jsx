@@ -28,6 +28,17 @@ const getTotalPrice = (items = []) => {
     }, 0);
 };
 
+const generateMessageText = (cartItems) => {
+    let message = "Дякуємо за замовлення!\n\n";
+    message += "Список замовлення:\n";
+    cartItems.forEach((item) => {
+      message += `${item.title} - ${item.quantity} шт.\n`;
+    });
+    const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    message += `\nЗагальна сума: ${totalPrice} грн`;
+    return message;
+};
+
 const ProductList = () => {
     const [addedItems, setAddedItems] = useState([]);
     const { tg, queryId } = useTelegram();
@@ -38,6 +49,10 @@ const ProductList = () => {
             totalPrice: getTotalPrice(addedItems),
             queryId,
         };
+        
+        const messageText = generateMessageText(addedItems); // Отримання тексту повідомлення
+        console.log(messageText); // Виведення тексту повідомлення в консоль для перевірки
+
         fetch('http://80.85.143.220:8000/web-data', {
             method: 'POST',
             headers: {
@@ -67,9 +82,14 @@ const ProductList = () => {
         let newItems = [];
 
         if (alreadyAdded) {
-            newItems = addedItems.filter(item => item.id !== product.id);
+            newItems = addedItems.map(item => {
+                if (item.id === product.id) {
+                    return { ...item, quantity: item.quantity + 1 };
+                }
+                return item;
+            });
         } else {
-            newItems = [...addedItems, product];
+            newItems = [...addedItems, { ...product, quantity: 1 }];
         }
 
         setAddedItems(newItems);
