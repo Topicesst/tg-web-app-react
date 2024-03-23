@@ -44,6 +44,14 @@ const ProductList = () => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // Optional: handle success response
+        }).catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+            // Optional: handle error
         });
     }, [addedItems, queryId]);
 
@@ -71,7 +79,7 @@ const ProductList = () => {
         } else {
             tg.MainButton.show();
             tg.MainButton.setParams({
-                text: `Купити ${getTotalPrice(newItems)}`
+                text: `Купить ${getTotalPrice(newItems)}`
             });
         }
     };
