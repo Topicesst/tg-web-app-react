@@ -48,12 +48,11 @@ const ProductList = () => {
         })
         .then(response => response.json())
         .then(result => {
-            console.log(result);
-            // Добавьте здесь логику для обработки успешного ответа от сервера, если нужно
+            console.log(result);           
         })
         .catch(error => {
             console.error('Ошибка:', error);
-            // Добавьте здесь логику для обработки ошибки, если нужно
+           
         });
     }, [addedItems, queryId]);
 
