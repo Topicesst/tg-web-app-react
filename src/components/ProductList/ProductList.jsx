@@ -23,9 +23,7 @@ const products = [
 ];
 
 const getTotalPrice = (items = []) => {
-    return items.reduce((acc, item) => {
-        return acc += item.price;
-    }, 0);
+    return items.reduce((acc, item) => acc + item.price, 0);
 };
 
 const ProductList = () => {
@@ -33,6 +31,7 @@ const ProductList = () => {
     const { tg, queryId } = useTelegram();
 
     const onSendData = useCallback(() => {
+        console.log("onSendData called"); // Додано логування для перевірки
         const data = {
             products: addedItems,
             totalPrice: getTotalPrice(addedItems),
@@ -48,11 +47,10 @@ const ProductList = () => {
         })
         .then(response => response.json())
         .then(result => {
-            console.log(result);           
+            console.log(result);
         })
         .catch(error => {
             console.error('Ошибка:', error);
-           
         });
     }, [addedItems, queryId]);
 
@@ -80,7 +78,7 @@ const ProductList = () => {
         } else {
             tg.MainButton.show();
             tg.MainButton.setParams({
-                text: 'Купити ${getTotalPrice(newItems)}'
+                text: `Купити ${getTotalPrice(newItems)}` // Виправлено на косі лапки для інтерполяції
             });
         }
     };
