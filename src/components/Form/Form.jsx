@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
-import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Form.css';
 import { useTelegram } from "../../hooks/useTelegram";
@@ -17,7 +16,7 @@ function LocationPicker({ onLocationSelect }) {
 const fetchAddress = async (latlng) => {
   const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`);
   if (!response.ok) {
-    throw new Error('Failed to fetch address');
+    throw new Error('Не вдалося отримати адресу');
   }
   const data = await response.json();
   return data;
@@ -26,7 +25,7 @@ const fetchAddress = async (latlng) => {
 const Form = () => {
   const [name, setName] = useState('');
   const [numberphone, setNumberPhone] = useState('');
-  const [country, setCountry] = useState('');
+  const [city, setCity] = useState('');
   const [street, setStreet] = useState('');
   const [subject, setSubject] = useState('physical');
   const [showMap, setShowMap] = useState(false);
@@ -36,12 +35,12 @@ const Form = () => {
     const data = {
       name,
       numberphone,
-      country,
+      city,
       street,
       subject
     };
     tg.sendData(JSON.stringify(data));
-  }, [name, numberphone, country, street, subject]);
+  }, [name, numberphone, city, street, subject]);
 
   useEffect(() => {
     tg.onEvent('mainButtonClicked', onSendData);
@@ -53,49 +52,59 @@ const Form = () => {
   const handleLocationSelect = async (latlng) => {
     try {
       const addressData = await fetchAddress(latlng);
-      // Отримуємо вулицю та місто з відповіді
       const streetName = addressData.address.road || addressData.address.pedestrian || '';
       const cityOrTown = addressData.address.city || addressData.address.town || addressData.address.village || '';
       
-      // Встановлюємо вулицю та місто у відповідні станові змінні
       setStreet(streetName);
-      setCountry(cityOrTown); // Тут ми використовуємо setCountry для збереження міста, це може бути трохи заплутано через назву змінної
+      setCity(cityOrTown);
       
       setShowMap(false); // Закриваємо модальне вікно після вибору місцезнаходження
     } catch (error) {
-      console.error('Error fetching address: ', error);
+      console.error('Помилка при отриманні адреси: ', error);
     }
   };
-  
+
+  const onChangeNumberPhone = (e) => {
+    let value = e.target.value.replace(/[^\d+]/g, ''); // Видаляємо все, крім цифр і знака плюс
+    if (value && !value.startsWith('+380')) {
+        value = '+380' + value.replace(/\+/g, ''); // Видаляємо зайві знаки плюс
+    }
+    if (value.length > 13) {
+        value = value.slice(0, 13); // Обмежуємо довжину введення
+    }
+    setNumberPhone(value);
+  };
 
   return (
     <div className="form">
-      <h3>Enter your details:</h3>
+      <h3>Введіть ваші дані:</h3>
       <input
         className="input"
         type="text"
-        placeholder="Name"
+        placeholder="ПІБ"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
       <input
         className="input"
         type="tel"
-        placeholder="Phone Number"
+        placeholder="Номер телефону"
         value={numberphone}
-        onChange={(e) => setNumberPhone(e.target.value)}
+        onChange={onChangeNumberPhone}
+        pattern="^\+380\d{3}\d{2}\d{2}\d{2}$"
+        title="+380XXXXXXXX (де X - цифра від 0 до 9)"
       />
       <input
         className="input"
         type="text"
-        placeholder="Country"
-        value={country}
-        onChange={(e) => setCountry(e.target.value)}
+        placeholder="Місто"
+        value={city}
+        onChange={(e) => setCity(e.target.value)}
       />
       <input
         className="input"
         type="text"
-        placeholder="Street"
+        placeholder="Вулиця"
         value={street}
         onChange={(e) => setStreet(e.target.value)}
       />
@@ -104,11 +113,11 @@ const Form = () => {
         value={subject}
         onChange={(e) => setSubject(e.target.value)}
       >
-        <option value="physical">Physical Person</option>
-        <option value="legal">Legal Person</option>
+        <option value="physical">Фізична особа</option>
+        <option value="legal">Юридична особа</option>
       </select>
       <button type="button" className="button-select-location" onClick={() => setShowMap(true)}>
-        Select Location on Map
+        Вибрати місцезнаходження на карті
       </button>
       {showMap && (
         <div className="map-modal">
@@ -118,7 +127,7 @@ const Form = () => {
             />
             <LocationPicker onLocationSelect={handleLocationSelect} />
           </MapContainer>
-          <button type="button" onClick={() => setShowMap(false)}>Close Map</button>
+          <button type="button" onClick={() => setShowMap(false)}>Закрити карту</button>
         </div>
       )}
     </div>
