@@ -3,8 +3,8 @@ import './Form.css';
 import { useTelegram } from "../../hooks/useTelegram";
 
 const Form = () => {
-    const [name, setName] = useState(''); // Оголошення змінної для імені
-    const [numberphone, setNumberPhone] = useState(''); // Оголошення змінної для номеру телефону
+    const [name, setName] = useState('');
+    const [numberphone, setNumberPhone] = useState('');
     const [country, setCountry] = useState('');
     const [street, setStreet] = useState('');
     const [subject, setSubject] = useState('physical');
@@ -47,7 +47,12 @@ const Form = () => {
     }
 
     const onChangeNumberPhone = (e) => {
-        setNumberPhone(e.target.value)
+        let value = e.target.value;
+        // Автоматично додаємо +380 якщо введення розпочато і цього префіксу ще немає
+        if (value.length === 1 && !value.startsWith('+380')) {
+            value = '+380';
+        }
+        setNumberPhone(value)
     }
 
     const onChangeCountry = (e) => {
@@ -67,17 +72,20 @@ const Form = () => {
             <h3>Введіть ваші дані:</h3>
             <input
                 className={'input'}
-                type="text"
-                placeholder={'ПІБ'}
-                value={name}
-                onChange={onChangeName}
+                type="tel"
+                placeholder={'Номер телефону'}
+                value={numberphone}
+                onChange={onChangeNumberPhone}
+                // Додаємо паттерн для валідації формату українського номера
+                pattern="^\+380\d{3}\d{2}\d{2}\d{2}$"
+                title="+380XXXXXXXX (де X - цифра від 0 до 9)"
             />
             <input
                 className={'input'}
                 type="text"
-                placeholder={'Номер телефону'}
-                value={numberphone}
-                onChange={onChangeNumberPhone}
+                placeholder={'ПІБ'}
+                value={name}
+                onChange={onChangeName}
             />
             <input
                 className={'input'}
