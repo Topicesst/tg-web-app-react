@@ -35,10 +35,16 @@ const Form = () => {
 
   useEffect(() => {
     tg.MainButton.setParams({
-      text: 'Відправити дані'
+      text: 'Відправити дані',
     });
-    tg.MainButton.show();
-  }, [tg]);
+    // Визначаємо, чи слід показувати головну кнопку
+    const shouldBeVisible = name && numberphone && city && street;
+    if (shouldBeVisible) {
+      tg.MainButton.show();
+    } else {
+      tg.MainButton.hide();
+    }
+  }, [name, numberphone, city, street, tg]);
 
   const onSendData = useCallback(() => {
     const data = {
@@ -49,14 +55,7 @@ const Form = () => {
       deliveryMethod
     };
     tg.sendData(JSON.stringify(data));
-  }, [name, numberphone, city, street, deliveryMethod]);
-
-  useEffect(() => {
-    tg.onEvent('mainButtonClicked', onSendData);
-    return () => {
-      tg.offEvent('mainButtonClicked', onSendData);
-    };
-  }, [onSendData]);
+  }, [name, numberphone, city, street, deliveryMethod, tg]);
 
   const handleLocationSelect = async (latlng) => {
     try {
@@ -68,19 +67,19 @@ const Form = () => {
       setStreet(`${streetName} ${houseNumber}`.trim());
       setCity(cityOrTown);
       
-      setShowMap(false); // Закриваємо модальне вікно після вибору місцезнаходження
+      setShowMap(false);
     } catch (error) {
       console.error('Помилка при отриманні адреси: ', error);
     }
   };
 
   const onChangeNumberPhone = (e) => {
-    let value = e.target.value.replace(/[^\d+]/g, ''); // Видаляємо все, крім цифр і знака плюс
+    let value = e.target.value.replace(/[^\d+]/g, '');
     if (value && !value.startsWith('+380')) {
-        value = '+380' + value.replace(/\+/g, ''); // Видаляємо зайві знаки плюс
+        value = '+380' + value.replace(/\+/g, '');
     }
     if (value.length > 13) {
-        value = value.slice(0, 13); // Обмежуємо довжину введення
+        value = value.slice(0, 13);
     }
     setNumberPhone(value);
   };
@@ -112,12 +111,15 @@ const Form = () => {
         onChange={(e) => setCity(e.target.value)}
       />
       <input
-        className="input input-street"
+        className="input"
         type="text"
         placeholder="Вулиця"
         value={street}
         onChange={(e) => setStreet(e.target.value)}
       />
+      <button type="button" className="button-select-location" onClick={() => setShowMap(true)}>
+        Вибрати місцезнаходження на карті
+      </button>
       <label className="delivery-label">Доставка:</label>
       <select
         className="select select-delivery"
@@ -127,9 +129,6 @@ const Form = () => {
         <option value="courier">Кур'єр</option>
         <option value="pickup">Самовивіз</option>
       </select>
-      <button type="button" className="button-select-location" onClick={() => setShowMap(true)}>
-        Вибрати місцезнаходження на карті
-      </button>
       {showMap && (
         <div className="map-modal">
           <MapContainer center={[50.4501, 30.5234]} zoom={13} scrollWheelZoom={true} style={{ height: '400px', width: '100%' }}>
