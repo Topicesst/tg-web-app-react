@@ -53,13 +53,20 @@ const Form = () => {
   const handleLocationSelect = async (latlng) => {
     try {
       const addressData = await fetchAddress(latlng);
-      setCountry(addressData.address.country || '');
-      setStreet(`${addressData.address.road || ''}, ${addressData.address.house_number || ''}`);
-      setShowMap(false); // Close map modal after selecting the location
+      // Отримуємо вулицю та місто з відповіді
+      const streetName = addressData.address.road || addressData.address.pedestrian || '';
+      const cityOrTown = addressData.address.city || addressData.address.town || addressData.address.village || '';
+      
+      // Встановлюємо вулицю та місто у відповідні станові змінні
+      setStreet(streetName);
+      setCountry(cityOrTown); // Тут ми використовуємо setCountry для збереження міста, це може бути трохи заплутано через назву змінної
+      
+      setShowMap(false); // Закриваємо модальне вікно після вибору місцезнаходження
     } catch (error) {
       console.error('Error fetching address: ', error);
     }
   };
+  
 
   return (
     <div className="form">
