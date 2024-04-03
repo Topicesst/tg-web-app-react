@@ -46,13 +46,13 @@ const Form = () => {
         setName(e.target.value);
     };
 
-    const onChangeNumberPhone = (e) => {
-        const newValue = e.target.value;
-        // Перевірка на відповідність регулярному виразу перед оновленням стану
-        if (/^\+380\d*$/.test(newValue) || newValue === '') {
-            setNumberPhone(newValue);
-        }
-    };
+   const onChangeNumberPhone = (e) => {
+    const newValue = e.target.value;
+    // Дозволяємо вводити номер, який починається на +380 і продовжується будь-якою кількістю цифр до повного українського формату
+    if (/^\+380\d{0,9}$/.test(newValue) || newValue === '') {
+        setNumberPhone(newValue);
+    }
+};
 
     const onChangeCountry = (e) => {
         setCountry(e.target.value);
