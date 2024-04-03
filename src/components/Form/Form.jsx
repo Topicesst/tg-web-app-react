@@ -123,9 +123,19 @@ const Form = () => {
       <button type="button" className="button-select-location" onClick={() => setShowMap(true)}>
         Вибрати місцезнаходження на карті
       </button>
-      {/* Компонент MapContainer та кнопка закриття карти залишаються без змін */}
+      {showMap && (
+        <div className="map-modal">
+          <MapContainer center={[50.4501, 30.5234]} zoom={13} scrollWheelZoom={true} style={{ height: '400px', width: '100%' }}>
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <LocationPicker onLocationSelect={handleLocationSelect} />
+          </MapContainer>
+          <button type="button" onClick={() => setShowMap(false)}>Закрити карту</button>
+        </div>
+      )}
     </div>
-);
+  );
 };
 
 export default Form;
