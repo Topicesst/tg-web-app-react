@@ -14,7 +14,9 @@ function LocationPicker({ onLocationSelect }) {
 }
 
 const fetchAddress = async (latlng) => {
-  const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`);
+  const response = await fetch(
+    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`
+  );
   if (!response.ok) {
     throw new Error('Не вдалося отримати адресу');
   }
@@ -53,9 +55,10 @@ const Form = () => {
     try {
       const addressData = await fetchAddress(latlng);
       const streetName = addressData.address.road || addressData.address.pedestrian || '';
+      const houseNumber = addressData.address.house_number || '';
       const cityOrTown = addressData.address.city || addressData.address.town || addressData.address.village || '';
       
-      setStreet(streetName);
+      setStreet(`${streetName} ${houseNumber}`.trim());
       setCity(cityOrTown);
       
       setShowMap(false); // Закриваємо модальне вікно після вибору місцезнаходження
