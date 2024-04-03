@@ -33,6 +33,13 @@ const Form = () => {
   const [showMap, setShowMap] = useState(false);
   const { tg } = useTelegram();
 
+  useEffect(() => {
+    tg.MainButton.setParams({
+      text: 'Відправити дані'
+    });
+    tg.MainButton.show();
+  }, [tg]);
+
   const onSendData = useCallback(() => {
     const data = {
       name,
