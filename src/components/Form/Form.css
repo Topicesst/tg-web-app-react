@@ -54,3 +54,14 @@
     border-radius: 5px;
     cursor: pointer;
 }
+
+/* Додавання стилів для кнопки "Select Location on Map" у старому дизайні */
+.button-select-location {
+    padding: 10px 20px;
+    margin-top: 15px;
+    background-color: var(--tg-theme-button-color); /* Замініть цю змінну на конкретний колір, якщо потрібно */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

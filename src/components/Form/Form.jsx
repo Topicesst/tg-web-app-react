@@ -92,7 +92,7 @@ const Form = () => {
                 <option value="physical">Physical Person</option>
                 <option value="legal">Legal Person</option>
             </select>
-            <button type="button" onClick={() => setShowMap(true)}>Select Location on Map</button>
+            <button type="button" className="button-select-location" onClick={() => setShowMap(true)}>Select Location on Map</button>
             {showMap && (
                 <div className="map-modal">
                     <MapContainer center={[50.4501, 30.5234]} zoom={13} scrollWheelZoom={true} style={{ height: '400px', width: '100%' }}>
