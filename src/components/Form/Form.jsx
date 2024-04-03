@@ -3,8 +3,8 @@ import './Form.css';
 import { useTelegram } from "../../hooks/useTelegram";
 
 const Form = () => {
-    const [name, setName] = useState('');
-    const [numberphone, setNumberPhone] = useState('');
+    const [name, setName] = useState(''); // Оголошення змінної для імені
+    const [numberphone, setNumberPhone] = useState(''); // Оголошення змінної для номеру телефону
     const [country, setCountry] = useState('');
     const [street, setStreet] = useState('');
     const [subject, setSubject] = useState('physical');
@@ -17,54 +17,50 @@ const Form = () => {
             country,
             street,
             subject
-        };
+        }
         tg.sendData(JSON.stringify(data));
     }, [name, numberphone, country, street, subject]);
 
     useEffect(() => {
-        tg.onEvent('mainButtonClicked', onSendData);
+        tg.onEvent('mainButtonClicked', onSendData)
         return () => {
-            tg.offEvent('mainButtonClicked', onSendData);
-        };
-    }, [onSendData]);
+            tg.offEvent('mainButtonClicked', onSendData)
+        }
+    }, [onSendData])
 
     useEffect(() => {
         tg.MainButton.setParams({
             text: 'Відправити дані'
-        });
-    }, []);
+        })
+    }, [])
 
     useEffect(() => {
-        if (!street || !country || !name || !numberphone || !/^\+380\d{9}$/.test(numberphone)) {
+        if (!street || !country || !name || !numberphone) {
             tg.MainButton.hide();
         } else {
             tg.MainButton.show();
         }
-    }, [country, street, name, numberphone]);
+    }, [country, street, name, numberphone])
 
     const onChangeName = (e) => {
-        setName(e.target.value);
-    };
-
-   const onChangeNumberPhone = (e) => {
-    const newValue = e.target.value;
-    // Дозволяємо вводити номер, який починається на +380 і продовжується будь-якою кількістю цифр до повного українського формату
-    if (/^\+380\d{0,9}$/.test(newValue) || newValue === '') {
-        setNumberPhone(newValue);
+        setName(e.target.value)
     }
-};
+
+    const onChangeNumberPhone = (e) => {
+        setNumberPhone(e.target.value)
+    }
 
     const onChangeCountry = (e) => {
-        setCountry(e.target.value);
-    };
+        setCountry(e.target.value)
+    }
 
     const onChangeStreet = (e) => {
-        setStreet(e.target.value);
-    };
+        setStreet(e.target.value)
+    }
 
     const onChangeSubject = (e) => {
-        setSubject(e.target.value);
-    };
+        setSubject(e.target.value)
+    }
 
     return (
         <div className={"form"}>
