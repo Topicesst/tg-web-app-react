@@ -17,22 +17,22 @@ const Form = () => {
             country,
             street,
             subject
-        }
+        };
         tg.sendData(JSON.stringify(data));
     }, [name, numberphone, country, street, subject]);
 
     useEffect(() => {
-        tg.onEvent('mainButtonClicked', onSendData)
+        tg.onEvent('mainButtonClicked', onSendData);
         return () => {
-            tg.offEvent('mainButtonClicked', onSendData)
-        }
-    }, [onSendData])
+            tg.offEvent('mainButtonClicked', onSendData);
+        };
+    }, [onSendData]);
 
     useEffect(() => {
         tg.MainButton.setParams({
             text: 'Відправити дані'
-        })
-    }, [])
+        });
+    }, []);
 
     useEffect(() => {
         if (!street || !country || !name || !numberphone) {
@@ -40,32 +40,34 @@ const Form = () => {
         } else {
             tg.MainButton.show();
         }
-    }, [country, street, name, numberphone])
+    }, [country, street, name, numberphone]);
 
     const onChangeName = (e) => {
-        setName(e.target.value)
-    }
+        setName(e.target.value);
+    };
 
     const onChangeNumberPhone = (e) => {
-        let value = e.target.value;
-        // Автоматично додаємо +380 якщо введення розпочато і цього префіксу ще немає
-        if (value.length === 1 && !value.startsWith('+380')) {
-            value = '+380';
+        let value = e.target.value.replace(/[^\d+]/g, ''); // Видаляємо все, крім цифр і знака плюс
+        if (value && !value.startsWith('+380')) {
+            value = '+380' + value.replace(/\+/g, ''); // Видаляємо зайві знаки плюс
         }
-        setNumberPhone(value)
-    }
+        if (value.length > 13) {
+            value = value.slice(0, 13); // Обмежуємо довжину введення
+        }
+        setNumberPhone(value);
+    };
 
     const onChangeCountry = (e) => {
-        setCountry(e.target.value)
-    }
+        setCountry(e.target.value);
+    };
 
     const onChangeStreet = (e) => {
-        setStreet(e.target.value)
-    }
+        setStreet(e.target.value);
+    };
 
     const onChangeSubject = (e) => {
-        setSubject(e.target.value)
-    }
+        setSubject(e.target.value);
+    };
 
     return (
         <div className={"form"}>
@@ -76,7 +78,6 @@ const Form = () => {
                 placeholder={'Номер телефону'}
                 value={numberphone}
                 onChange={onChangeNumberPhone}
-                // Додаємо паттерн для валідації формату українського номера
                 pattern="^\+380\d{3}\d{2}\d{2}\d{2}$"
                 title="+380XXXXXXXX (де X - цифра від 0 до 9)"
             />
