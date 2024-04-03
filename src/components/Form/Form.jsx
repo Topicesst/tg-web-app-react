@@ -34,12 +34,11 @@ const Form = () => {
   const { tg } = useTelegram();
 
   useEffect(() => {
-    tg.MainButton.setParams({
-      text: 'Відправити дані',
-    });
-    // Визначаємо, чи слід показувати головну кнопку
     const shouldBeVisible = name && numberphone && city && street;
     if (shouldBeVisible) {
+      tg.MainButton.setParams({
+        text: 'Відправити дані',
+      });
       tg.MainButton.show();
     } else {
       tg.MainButton.hide();
