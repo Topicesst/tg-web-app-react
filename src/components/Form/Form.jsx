@@ -1,6 +1,28 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 import './Form.css';
 import { useTelegram } from "../../hooks/useTelegram";
+
+function LocationPicker({ onLocationSelect }) {
+  useMapEvents({
+    click(e) {
+      onLocationSelect(e.latlng);
+    },
+  });
+  return null;
+}
+
+const fetchAddress = async (latlng) => {
+  const response = await fetch(
+    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`
+  );
+  if (!response.ok) {
+    throw new Error('Не вдалося отримати адресу');
+  }
+  const data = await response.json();
+  return data;
+};
 
 const Form = () => {
     const [name, setName] = useState(''); // Оголошення змінної для імені
@@ -10,30 +32,31 @@ const Form = () => {
     const [subject, setSubject] = useState('physical');
     const { tg } = useTelegram();
 
+    useEffect(() => {
+      tg.onEvent('mainButtonClicked', onSendData)
+      return () => {
+          tg.offEvent('mainButtonClicked', onSendData)
+      }
+  }, [onSendData])
+
+  useEffect(() => {
+      tg.MainButton.setParams({
+          text: 'Відправити дані'
+      })
+  }, [])
+
     const onSendData = useCallback(() => {
         const data = {
             name,
             numberphone,
-            country,
+            city,
             street,
-            subject
+            deliveryMethod
         }
         tg.sendData(JSON.stringify(data));
-    }, [name, numberphone, country, street, subject]);
+    }, [name, numberphone, city, street, deliveryMethod]);
 
-    useEffect(() => {
-        tg.onEvent('mainButtonClicked', onSendData)
-        return () => {
-            tg.offEvent('mainButtonClicked', onSendData)
-        }
-    }, [onSendData])
-
-    useEffect(() => {
-        tg.MainButton.setParams({
-            text: 'Відправити дані'
-        })
-    }, [])
-
+  
     useEffect(() => {
         if (!street || !country || !name || !numberphone) {
             tg.MainButton.hide();
