@@ -21,7 +21,11 @@ const fetchAddress = async (latlng) => {
     throw new Error('Не вдалося отримати адресу');
   }
   const data = await response.json();
-  return data;
+  return { 
+    streetName: data.address.road || data.address.pedestrian || '', 
+    houseNumber: data.address.house_number || '', 
+    cityOrTown: data.address.city || data.address.town || data.address.village || '' 
+  };
 };
 
 const Form = () => {
@@ -34,17 +38,21 @@ const Form = () => {
   const { tg } = useTelegram();
 
   useEffect(() => {
-    tg.onEvent('mainButtonClicked', onSendData)
-    return () => {
-        tg.offEvent('mainButtonClicked', onSendData)
-    }
-}, [onSendData])
+    tg.onEvent('mainButtonClicked', onSendData);
+    return () => tg.offEvent('mainButtonClicked', onSendData);
+  }, [tg, onSendData]);
 
-useEffect(() => {
-    tg.MainButton.setParams({
-        text: 'Відправити дані'
-    })
-}, [])
+  useEffect(() => {
+    const shouldBeVisible = name && numberphone && city && street && deliveryMethod;
+    if (shouldBeVisible) {
+      tg.MainButton.setParams({
+        text: 'Відправити дані',
+      });
+      tg.MainButton.show();
+    } else {
+      tg.MainButton.hide();
+    }
+  }, [name, numberphone, city, street, deliveryMethod, tg]);
 
   const onSendData = useCallback(() => {
     const data = {
@@ -59,10 +67,7 @@ useEffect(() => {
 
   const handleLocationSelect = async (latlng) => {
     try {
-      const addressData = await fetchAddress(latlng);
-      const streetName = addressData.address.road || addressData.address.pedestrian || '';
-      const houseNumber = addressData.address.house_number || '';
-      const cityOrTown = addressData.address.city || addressData.address.town || addressData.address.village || '';
+      const { streetName, houseNumber, cityOrTown } = await fetchAddress(latlng);
       
       setStreet(`${streetName} ${houseNumber}`.trim());
       setCity(cityOrTown);
@@ -131,10 +136,8 @@ useEffect(() => {
       </select>
       {showMap && (
         <div className="map-modal">
-          <MapContainer center={[50.4501, 30.5234]} zoom={13} scrollWheelZoom={true} style={{ height: '400px', width: '100%' }}>
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
+          <MapContainer center={[50.4501, 30.5234]} zoom={13} scrollWheelZoom={true} style={{height: '400px', width: '100%'}}>
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             <LocationPicker onLocationSelect={handleLocationSelect} />
           </MapContainer>
           <button type="button" onClick={() => setShowMap(false)}>Закрити карту</button>
