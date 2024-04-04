@@ -18,45 +18,25 @@ const Form = () => {
     const [numberphone, setNumberPhone] = useState('');
     const [city, setCity] = useState('');
     const [street, setStreet] = useState('');
-    const [selectedLocation, setSelectedLocation] = useState(null); 
+    const [selectedLocation, setSelectedLocation] = useState(null); // Додано для зберігання вибраної локації
     const [showMap, setShowMap] = useState(false);
     const [deliveryMethod, setDeliveryMethod] = useState('courier');
     const { tg } = useTelegram();
 
-    const calculateDeliveryPrice = () => {
-      if (deliveryMethod === 'pickup') {
-        return 0; // Доставка безкоштовна
-      } else if (selectedLocation && deliveryMethod === 'courier') {
-        const distance = calculateDistance(48.281255389712804, 25.97772702722112, selectedLocation.lat, selectedLocation.lng);
-        const deliveryPrice = 20 + distance.toFixed(2) * 1;
-        console.log('Розрахована вартість доставки: ', deliveryPrice);
-        return deliveryPrice;
-      }
-      return null; // Якщо місцезнаходження не вибрано
-    };
-    
     const onSendData = useCallback(() => {
-      // Перевірка, чи є selectedLocation валідним об'єктом із координатами
-      if (!selectedLocation || !selectedLocation.lat || !selectedLocation.lng) {
-          console.error('Вибране місцезнаходження не має координат');
-          return; // Припиняємо виконання функції, якщо координати не валідні
-      }
-  
-      // Продовжуємо, якщо координати існують
-      const deliveryPrice = calculateDeliveryPrice(); 
-      console.log('Відправлена вартість доставки: ', deliveryPrice);
+      const deliveryPrice = calculateDeliveryPrice(); // Правильно викликати тут
       const data = {
           name,
           numberphone,
           city,
           street,
           deliveryMethod,
-          deliveryPrice // Це повинно бути числом
+          deliveryPrice 
       };
-      console.log('Відправлені дані: ', JSON.stringify(data));
       tg.sendData(JSON.stringify(data));
-  }, [name, numberphone, city, street, deliveryMethod, selectedLocation]);
+  }, [name, numberphone, city, street, deliveryMethod, selectedLocation]); // замість calculateDeliveryPrice тут має бути selectedLocation
   
+
     useEffect(() => {
         tg.onEvent('mainButtonClicked', onSendData);
         return () => {
@@ -99,7 +79,7 @@ const Form = () => {
     };
 
     const handleLocationSelect = async (latlng) => {
-        setSelectedLocation(latlng); 
+        setSelectedLocation(latlng); // Зберігання координат вибраної локації
         try {
             const addressData = await fetchAddress(latlng);
             const streetName = addressData.address.road || addressData.address.pedestrian || '';
@@ -133,6 +113,17 @@ const Form = () => {
     };
 
     // Визначення ціни доставки
+    const calculateDeliveryPrice = () => {
+      if (deliveryMethod === 'pickup') {
+          return 0; // Доставка безкоштовна
+      } else if (selectedLocation && deliveryMethod === 'courier') {
+          const distance = calculateDistance(48.281255389712804, 25.97772702722112, selectedLocation.lat, selectedLocation.lng);
+          // Базова ціна 20 грн + 1 грн за кожен км
+          return 20 + distance.toFixed(2) * 1; // Повертаємо як число
+      }
+      return null; // Якщо місцезнаходження не вибрано
+    };
+    
 
     return (
         <div className="form">
