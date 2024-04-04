@@ -115,15 +115,15 @@ const Form = () => {
     // Визначення ціни доставки
     const calculateDeliveryPrice = () => {
       if (deliveryMethod === 'pickup') {
-          return 'Безкоштовно';
+          return 0; // Доставка безкоштовна
       } else if (selectedLocation && deliveryMethod === 'courier') {
           const distance = calculateDistance(48.281255389712804, 25.97772702722112, selectedLocation.lat, selectedLocation.lng);
           // Базова ціна 20 грн + 1 грн за кожен км
-          const deliveryPrice = 20 + distance.toFixed(2) * 1;
-          return `${deliveryPrice.toFixed(2)} грн`;
+          return 20 + distance.toFixed(2) * 1; // Повертаємо як число
       }
-      return 'Не вибрано місцезнаходження';
-  };
+      return null; // Якщо місцезнаходження не вибрано
+    };
+    
 
     return (
         <div className="form">
