@@ -29,7 +29,7 @@ const Form = () => {
   const [numberphone, setNumberPhone] = useState('');
   const [city, setCity] = useState('');
   const [street, setStreet] = useState('');
-  const [subject, setSubject] = useState('physical');
+  const [deliveryMethod, setDeliveryMethod] = useState('courier');
   const [showMap, setShowMap] = useState(false);
   const { tg } = useTelegram();
 
@@ -39,10 +39,10 @@ const Form = () => {
       numberphone,
       city,
       street,
-      subject
+      deliveryMethod
     };
     tg.sendData(JSON.stringify(data));
-  }, [name, numberphone, city, street, subject]);
+  }, [name, numberphone, city, street, deliveryMethod]);
 
   useEffect(() => {
     tg.onEvent('mainButtonClicked', onSendData);
@@ -111,11 +111,11 @@ const Form = () => {
         value={street}
         onChange={(e) => setStreet(e.target.value)}
       />
-      <h4>Доставка:</h4> {/* Доданий заголовок */}
+      <h4>Доставка:</h4>
       <select
         className="select"
-        value={subject}
-        onChange={(e) => setSubject(e.target.value)}
+        value={deliveryMethod}
+        onChange={(e) => setDeliveryMethod(e.target.value)}
       >
         <option value="courier">Кур'єр</option>
         <option value="pickup">Самовивіз</option>
