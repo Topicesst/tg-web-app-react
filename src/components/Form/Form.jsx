@@ -3,7 +3,7 @@ import './Form.css';
 import { useTelegram } from "../../hooks/useTelegram";
 import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-// Потрібно додати імпорт для LocationPicker
+import LocationPicker from './LocationPicker'; // Переконайтеся, що шлях до LocationPicker правильний
 
 const Form = () => {
     const [name, setName] = useState('');
@@ -14,28 +14,13 @@ const Form = () => {
     const [deliveryMethod, setDeliveryMethod] = useState('courier');
     const { tg } = useTelegram();
 
-    const onSendData = useCallback(() => {
-        const data = {
-            name,
-            numberphone,
-            city,
-            street,
-            deliveryMethod
-        };
-        tg.sendData(JSON.stringify(data));
-    }, [name, numberphone, city, street, deliveryMethod]);
-
     useEffect(() => {
         tg.onEvent('mainButtonClicked', onSendData);
-        return () => {
-            tg.offEvent('mainButtonClicked', onSendData);
-        };
+        return () => tg.offEvent('mainButtonClicked', onSendData);
     }, [onSendData]);
 
     useEffect(() => {
-        tg.MainButton.setParams({
-            text: 'Відправити дані'
-        });
+        tg.MainButton.setParams({ text: 'Відправити дані' });
         if (!street || !city || !name || numberphone.length !== 13) {
             tg.MainButton.hide();
         } else {
@@ -43,10 +28,12 @@ const Form = () => {
         }
     }, [city, street, name, numberphone]);
 
-    const onChangeName = (e) => {
-        setName(e.target.value);
-    };
+    const onSendData = useCallback(() => {
+        const data = { name, numberphone, city, street, deliveryMethod };
+        tg.sendData(JSON.stringify(data));
+    }, [name, numberphone, city, street, deliveryMethod]);
 
+    const onChangeName = (e) => setName(e.target.value);
     const onChangeNumberPhone = (e) => {
         let value = e.target.value.replace(/[^\d+]/g, '');
         if (value && !value.startsWith('+380')) {
@@ -57,39 +44,27 @@ const Form = () => {
         }
         setNumberPhone(value);
     };
-
-    const onChangeCity = (e) => {
-        setCity(e.target.value);
-    };
-
-    const onChangeStreet = (e) => {
-        setStreet(e.target.value);
-    };
+    const onChangeCity = (e) => setCity(e.target.value);
+    const onChangeStreet = (e) => setStreet(e.target.value);
 
     const fetchAddress = async (latlng) => {
-        const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`
-        );
-        if (!response.ok) {
-            throw new Error('Не вдалося отримати адресу');
+        try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`);
+            if (!response.ok) throw new Error('Не вдалося отримати адресу');
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Помилка при отриманні адреси: ', error);
         }
-        const data = await response.json();
-        return data;
     };
 
     const handleLocationSelect = async (latlng) => {
-        try {
-            const addressData = await fetchAddress(latlng);
-            const streetName = addressData.address.road || addressData.address.pedestrian || '';
-            const houseNumber = addressData.address.house_number || '';
-            const cityOrTown = addressData.address.city || addressData.address.town || addressData.address.village || '';
-
-            setStreet(`${streetName} ${houseNumber}`.trim());
-            setCity(cityOrTown);
-
+        const addressData = await fetchAddress(latlng);
+        if (addressData) {
+            const { road: streetName, pedestrian, house_number: houseNumber, city: cityOrTown, town, village } = addressData.address;
+            setStreet(`${streetName || pedestrian} ${houseNumber || ''}`.trim());
+            setCity(cityOrTown || town || village);
             setShowMap(false);
-        } catch (error) {
-            console.error('Помилка при отриманні адреси: ', error);
         }
     };
 
@@ -144,7 +119,6 @@ const Form = () => {
                         <TileLayer
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
-                        {/* Припускаємо, що LocationPicker - це ваш кастомний компонент */}
                         <LocationPicker onLocationSelect={handleLocationSelect} />
                     </MapContainer>
                     <button type="button" onClick={() => setShowMap(false)}>Закрити карту</button>
