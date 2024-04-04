@@ -18,24 +18,21 @@ const Form = () => {
     const [numberphone, setNumberPhone] = useState('');
     const [city, setCity] = useState('');
     const [street, setStreet] = useState('');
-    const [selectedLocation, setSelectedLocation] = useState(null); // Додано для зберігання вибраної локації
+    const [selectedLocation, setSelectedLocation] = useState(null);
     const [showMap, setShowMap] = useState(false);
     const [deliveryMethod, setDeliveryMethod] = useState('courier');
     const { tg } = useTelegram();
 
     const onSendData = useCallback(() => {
-      const deliveryPrice = calculateDeliveryPrice(); // Правильно викликати тут
       const data = {
           name,
           numberphone,
           city,
           street,
           deliveryMethod,
-          deliveryPrice // Тепер це правильно включено
       };
       tg.sendData(JSON.stringify(data));
-  }, [name, numberphone, city, street, deliveryMethod, selectedLocation]); // замість calculateDeliveryPrice тут має бути selectedLocation
-  
+  }, [name, numberphone, city, street, deliveryMethod, selectedLocation]);
 
     useEffect(() => {
         tg.onEvent('mainButtonClicked', onSendData);
@@ -79,7 +76,7 @@ const Form = () => {
     };
 
     const handleLocationSelect = async (latlng) => {
-        setSelectedLocation(latlng); // Зберігання координат вибраної локації
+        setSelectedLocation(latlng);
         try {
             const addressData = await fetchAddress(latlng);
             const streetName = addressData.address.road || addressData.address.pedestrian || '';
@@ -105,25 +102,6 @@ const Form = () => {
         const data = await response.json();
         return data;
     };
-
-    // Розрахунок відстані
-    const calculateDistance = (lat1, lon1, lat2, lon2) => {
-        // Ваша реалізація обчислення відстані
-        return Math.sqrt(Math.pow(lat2 - lat1, 2) + Math.pow(lon2 - lon1, 2)) * 111; // Прикладна формула
-    };
-
-    // Визначення ціни доставки
-    const calculateDeliveryPrice = () => {
-      if (deliveryMethod === 'pickup') {
-          return 'Безкоштовно';
-      } else if (selectedLocation && deliveryMethod === 'courier') {
-          const distance = calculateDistance(48.281255389712804, 25.97772702722112, selectedLocation.lat, selectedLocation.lng);
-          // Базова ціна 20 грн + 1 грн за кожен км
-          const deliveryPrice = 20 + distance.toFixed(2) * 1;
-          return `${deliveryPrice.toFixed(2)} грн`;
-      }
-      return 'Не вибрано місцезнаходження';
-  };
 
     return (
         <div className="form">
@@ -180,11 +158,6 @@ const Form = () => {
                     </MapContainer>
                     <button type="button" onClick={() => setShowMap(false)}>Закрити карту</button>
                 </div>
-            )}
-            {/* Відображення ціни доставки та адреси для самовивозу */}
-            <div>Ціна доставки: {calculateDeliveryPrice()}</div>
-            {deliveryMethod === 'pickup' && (
-                <div>Адреса для самовивозу: вулиця Руська, 209-Б, Чернівці, Чернівецька область, Україна</div>
             )}
         </div>
     );
