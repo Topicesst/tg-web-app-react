@@ -24,15 +24,18 @@ const Form = () => {
     const { tg } = useTelegram();
 
     const onSendData = useCallback(() => {
-        const data = {
-            name,
-            numberphone,
-            city,
-            street,
-            deliveryMethod
-        };
-        tg.sendData(JSON.stringify(data));
-    }, [name, numberphone, city, street, deliveryMethod]);
+      const deliveryPrice = calculateDeliveryPrice(); // Правильно викликати тут
+      const data = {
+          name,
+          numberphone,
+          city,
+          street,
+          deliveryMethod,
+          deliveryPrice // Тепер це правильно включено
+      };
+      tg.sendData(JSON.stringify(data));
+  }, [name, numberphone, city, street, deliveryMethod, selectedLocation]); // замість calculateDeliveryPrice тут має бути selectedLocation
+  
 
     useEffect(() => {
         tg.onEvent('mainButtonClicked', onSendData);
