@@ -3,8 +3,7 @@ import './Form.css';
 import { useTelegram } from "../../hooks/useTelegram";
 import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-// Припускаємо, що LocationPicker - це ваш кастомний компонент для вибору локації
-// Додайте відповідний імпорт для LocationPicker
+// Потрібно додати імпорт для LocationPicker
 
 const Form = () => {
     const [name, setName] = useState('');
@@ -12,7 +11,7 @@ const Form = () => {
     const [city, setCity] = useState('');
     const [street, setStreet] = useState('');
     const [showMap, setShowMap] = useState(false);
-    const [deliveryMethod, setDeliveryMethod] = useState('courier'); // Додано нову змінну стану для методу доставки
+    const [deliveryMethod, setDeliveryMethod] = useState('courier');
     const { tg } = useTelegram();
 
     const onSendData = useCallback(() => {
@@ -21,8 +20,8 @@ const Form = () => {
             numberphone,
             city,
             street,
-            deliveryMethod 
-        }
+            deliveryMethod
+        };
         tg.sendData(JSON.stringify(data));
     }, [name, numberphone, city, street, deliveryMethod]);
 
@@ -37,15 +36,7 @@ const Form = () => {
         tg.MainButton.setParams({
             text: 'Відправити дані'
         });
-        if (numberphone.length === 13 && street && city && name) {
-          tg.MainButton.show();
-      } else {
-          tg.MainButton.hide();
-      }
-  }, [city, street, name, numberphone]);
-
-    useEffect(() => {
-        if (!street || !city || !name || !numberphone) {
+        if (!street || !city || !name || numberphone.length !== 13) {
             tg.MainButton.hide();
         } else {
             tg.MainButton.show();
@@ -135,30 +126,29 @@ const Form = () => {
                 value={street}
                 onChange={onChangeStreet}
             />
-           
             <button type="button" className="button-select-location" onClick={() => setShowMap(true)}>
                 Вибрати місцезнаходження на карті
             </button>
             <label className="delivery-label">Доставка:</label>
             <select
-              className="select select-delivery"
-              value={deliveryMethod}
-              onChange={(e) => setDeliveryMethod(e.target.value)}
+                className="select select-delivery"
+                value={deliveryMethod}
+                onChange={(e) => setDeliveryMethod(e.target.value)}
             >
-              <option value="courier">Кур'єр</option>
-              <option value="pickup">Самовивіз</option>
+                <option value="courier">Кур'єр</option>
+                <option value="pickup">Самовивіз</option>
             </select>
             {showMap && (
-              <div className="map-modal">
-                <MapContainer center={[50.4501, 30.5234]} zoom={13} scrollWheelZoom={true} style={{ height: '400px', width: '100%' }}>
-                  <TileLayer
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                  {/* LocationPicker компонент треба імплементувати або використати існуючий */}
-                  <LocationPicker onLocationSelect={handleLocationSelect} />
-                </MapContainer>
-                <button type="button" onClick={() => setShowMap(false)}>Закрити карту</button>
-              </div>
+                <div className="map-modal">
+                    <MapContainer center={[50.4501, 30.5234]} zoom={13} scrollWheelZoom={true} style={{ height: '400px', width: '100%' }}>
+                        <TileLayer
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+                        {/* Припускаємо, що LocationPicker - це ваш кастомний компонент */}
+                        <LocationPicker onLocationSelect={handleLocationSelect} />
+                    </MapContainer>
+                    <button type="button" onClick={() => setShowMap(false)}>Закрити карту</button>
+                </div>
             )}
         </div>
     );
