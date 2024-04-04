@@ -103,6 +103,23 @@ const Form = () => {
         return data;
     };
 
+    const calculateDistance = (lat1, lon1, lat2, lon2) => {
+        // Ваша реалізація обчислення відстані
+        return Math.sqrt(Math.pow(lat2 - lat1, 2) + Math.pow(lon2 - lon1, 2)) * 111; // Прикладна формула
+    };
+
+    const calculateDeliveryPrice = () => {
+      if (deliveryMethod === 'pickup') {
+          return 'Безкоштовно';
+      } else if (selectedLocation && deliveryMethod === 'courier') {
+          const distance = calculateDistance(48.281255389712804, 25.97772702722112, selectedLocation.lat, selectedLocation.lng);
+          // Базова ціна 20 грн + 1 грн за кожен км
+          const deliveryPrice = 20 + distance.toFixed(2) * 1;
+          return `${deliveryPrice.toFixed(2)} грн`;
+      }
+      return 'Не вибрано місцезнаходження';
+  };
+
     return (
         <div className="form">
             <h3>Введіть ваші дані:</h3>
@@ -158,6 +175,10 @@ const Form = () => {
                     </MapContainer>
                     <button type="button" onClick={() => setShowMap(false)}>Закрити карту</button>
                 </div>
+            )}
+            <div>Ціна доставки: {calculateDeliveryPrice()}</div>
+            {deliveryMethod === 'pickup' && (
+                <div>Адреса для самовивозу: вулиця Руська, 209-Б, Чернівці, Чернівецька область, Україна</div>
             )}
         </div>
     );
