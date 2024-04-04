@@ -65,6 +65,15 @@ const Form = () => {
         setStreet(e.target.value);
     };
 
+    function LocationPicker({ onLocationSelect }) {
+      useMapEvents({
+        click(e) {
+          onLocationSelect(e.latlng);
+        },
+      });
+      return null;
+    }
+    
     const fetchAddress = async (latlng) => {
         const response = await fetch(
             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`
