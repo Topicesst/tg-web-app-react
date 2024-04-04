@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import './Form.css';
 import { useTelegram } from "../../hooks/useTelegram";
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-// Потрібно додати імпорт для LocationPicker
 
 const Form = () => {
     const [name, setName] = useState('');
