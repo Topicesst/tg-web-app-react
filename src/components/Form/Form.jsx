@@ -9,9 +9,8 @@ import 'leaflet/dist/leaflet.css';
 const Form = () => {
     const [name, setName] = useState('');
     const [numberphone, setNumberPhone] = useState('');
-    const [country, setCountry] = useState('');
+    const [city, setCity] = useState('');
     const [street, setStreet] = useState('');
-    const [subject, setSubject] = useState('physical');
     const [showMap, setShowMap] = useState(false);
     const [deliveryMethod, setDeliveryMethod] = useState('courier'); // Додано нову змінну стану для методу доставки
     const { tg } = useTelegram();
@@ -20,13 +19,12 @@ const Form = () => {
         const data = {
             name,
             numberphone,
-            country,
+            city,
             street,
-            subject,
-            deliveryMethod // Додавання методу доставки до даних для відправки
+            deliveryMethod 
         }
         tg.sendData(JSON.stringify(data));
-    }, [name, numberphone, country, street, subject, deliveryMethod]);
+    }, [name, numberphone, city, street, deliveryMethod]);
 
     useEffect(() => {
         tg.onEvent('mainButtonClicked', onSendData);
@@ -42,12 +40,12 @@ const Form = () => {
     }, []);
 
     useEffect(() => {
-        if (!street || !country || !name || !numberphone) {
+        if (!street || !city || !name || !numberphone) {
             tg.MainButton.hide();
         } else {
             tg.MainButton.show();
         }
-    }, [country, street, name, numberphone]);
+    }, [city, street, name, numberphone]);
 
     const onChangeName = (e) => {
         setName(e.target.value);
@@ -64,16 +62,12 @@ const Form = () => {
         setNumberPhone(value);
     };
 
-    const onChangeCountry = (e) => {
-        setCountry(e.target.value);
+    const onChangeCity = (e) => {
+        setCity(e.target.value);
     };
 
     const onChangeStreet = (e) => {
         setStreet(e.target.value);
-    };
-
-    const onChangeSubject = (e) => {
-        setSubject(e.target.value);
     };
 
     const fetchAddress = async (latlng) => {
@@ -95,7 +89,7 @@ const Form = () => {
             const cityOrTown = addressData.address.city || addressData.address.town || addressData.address.village || '';
 
             setStreet(`${streetName} ${houseNumber}`.trim());
-            setCountry(cityOrTown);
+            setCity(cityOrTown);
 
             setShowMap(false);
         } catch (error) {
@@ -126,8 +120,8 @@ const Form = () => {
                 className="input"
                 type="text"
                 placeholder="Місто"
-                value={country}
-                onChange={onChangeCountry}
+                value={city}
+                onChange={onChangeCity}
             />
             <input
                 className="input"
