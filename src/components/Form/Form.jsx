@@ -111,14 +111,16 @@ const Form = () => {
 
     // Визначення ціни доставки
     const calculateDeliveryPrice = () => {
-        if (deliveryMethod === 'pickup') {
-            return 'Безкоштовно';
-        } else if (selectedLocation && deliveryMethod === 'courier') {
-            const distance = calculateDistance(48.281255389712804, 25.97772702722112, selectedLocation.lat, selectedLocation.lng);
-            return `${distance.toFixed(2) * 1} грн`; // Кожен км +1 грн
-        }
-        return 'Не вибрано місцезнаходження';
-    };
+      if (deliveryMethod === 'pickup') {
+          return 'Безкоштовно';
+      } else if (selectedLocation && deliveryMethod === 'courier') {
+          const distance = calculateDistance(48.281255389712804, 25.97772702722112, selectedLocation.lat, selectedLocation.lng);
+          // Базова ціна 20 грн + 1 грн за кожен км
+          const deliveryPrice = 20 + distance.toFixed(2) * 1;
+          return `${deliveryPrice.toFixed(2)} грн`;
+      }
+      return 'Не вибрано місцезнаходження';
+  };
 
     return (
         <div className="form">
