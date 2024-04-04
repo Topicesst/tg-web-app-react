@@ -73,7 +73,7 @@ const Form = () => {
       });
       return null;
     }
-    
+
     const fetchAddress = async (latlng) => {
         const response = await fetch(
             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`
@@ -148,7 +148,7 @@ const Form = () => {
             </select>
             {showMap && (
                 <div className="map-modal">
-                    <MapContainer center={[50.4501, 30.5234]} zoom={13} scrollWheelZoom={true} style={{ height: '400px', width: '100%' }}>
+                    <MapContainer center={[48.281255389712804, 25.97772702722112]} zoom={13} scrollWheelZoom={true} style={{ height: '400px', width: '100%' }}>
                         <TileLayer
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
