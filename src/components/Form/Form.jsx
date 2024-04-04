@@ -23,26 +23,30 @@ const Form = () => {
     const [deliveryMethod, setDeliveryMethod] = useState('courier');
     const { tg } = useTelegram();
 
+    const onChangeDeliveryMethod = (e) => {
+        setDeliveryMethod(e.target.value);
+        console.log('Метод доставки:', e.target.value); // Додайте цей рядок
+    };
+
     const onSendData = useCallback(() => {
-      const deliveryPrice = calculateDeliveryPrice(); // Правильно викликати тут
+      const deliveryPrice = calculateDeliveryPrice();
       const data = {
           name,
           numberphone,
           city,
           street,
           deliveryMethod,
-          deliveryPrice // Тепер це правильно включено
+          deliveryPrice
       };
       tg.sendData(JSON.stringify(data));
-    }, [name, numberphone, city, street, deliveryMethod, selectedLocation]);
-    
+    }, [name, numberphone, city, street, deliveryMethod, selectedLocation, tg]);
 
     useEffect(() => {
         tg.onEvent('mainButtonClicked', onSendData);
         return () => {
             tg.offEvent('mainButtonClicked', onSendData);
         };
-    }, [onSendData]);
+    }, [onSendData, tg]);
 
     useEffect(() => {
         tg.MainButton.setParams({
@@ -53,7 +57,7 @@ const Form = () => {
         } else {
             tg.MainButton.show();
         }
-    }, [city, street, name, numberphone]);
+    }, [city, street, name, numberphone, tg]);
 
     const onChangeName = (e) => {
         setName(e.target.value);
@@ -107,8 +111,7 @@ const Form = () => {
     };
 
     const calculateDistance = (lat1, lon1, lat2, lon2) => {
-        // Ваша реалізація обчислення відстані
-        return Math.sqrt(Math.pow(lat2 - lat1, 2) + Math.pow(lon2 - lon1, 2)) * 111; // Прикладна формула
+        return Math.sqrt(Math.pow(lat2 - lat1, 2) + Math.pow(lon2 - lon1, 2)) * 111;
     };
 
     const calculateDeliveryPrice = () => {
@@ -116,7 +119,6 @@ const Form = () => {
           return 'Безкоштовно';
       } else if (selectedLocation && deliveryMethod === 'courier') {
           const distance = calculateDistance(48.281255389712804, 25.97772702722112, selectedLocation.lat, selectedLocation.lng);
-          // Базова ціна 20 грн + 1 грн за кожен км
           const deliveryPrice = 20 + distance.toFixed(2) * 1;
           return `${deliveryPrice.toFixed(2)} грн`;
       }
@@ -163,7 +165,7 @@ const Form = () => {
             <select
                 className="select select-delivery"
                 value={deliveryMethod}
-                onChange={(e) => setDeliveryMethod(e.target.value)}
+                onChange={onChangeDeliveryMethod}
             >
                 <option value="courier">Кур'єр</option>
                 <option value="pickup">Самовивіз</option>
