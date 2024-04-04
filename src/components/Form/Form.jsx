@@ -36,22 +36,27 @@ const Form = () => {
     };
     
     const onSendData = useCallback(() => {
-      const deliveryPrice = calculateDeliveryPrice();
+      // Перевірка, чи є selectedLocation валідним об'єктом із координатами
+      if (!selectedLocation || !selectedLocation.lat || !selectedLocation.lng) {
+          console.error('Вибране місцезнаходження не має координат');
+          return; // Припиняємо виконання функції, якщо координати не валідні
+      }
+  
+      // Продовжуємо, якщо координати існують
+      const deliveryPrice = calculateDeliveryPrice(); 
       console.log('Відправлена вартість доставки: ', deliveryPrice);
       const data = {
-        name,
-        numberphone,
-        city,
-        street,
-        deliveryMethod,
-        deliveryPrice
+          name,
+          numberphone,
+          city,
+          street,
+          deliveryMethod,
+          deliveryPrice // Це повинно бути числом
       };
       console.log('Відправлені дані: ', JSON.stringify(data));
       tg.sendData(JSON.stringify(data));
-    }, [name, numberphone, city, street, deliveryMethod, selectedLocation]);
-    
+  }, [name, numberphone, city, street, deliveryMethod, selectedLocation]);
   
-
     useEffect(() => {
         tg.onEvent('mainButtonClicked', onSendData);
         return () => {
