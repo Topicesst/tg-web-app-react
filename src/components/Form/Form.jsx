@@ -17,12 +17,11 @@ function LocationPicker({ onLocationSelect }) {
 const centerCoords = [48.281255389712804, 25.97772702722112];
 
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
-  const R = 6371; // радіус Землі в кілометрах
+  const R = 6371;
   const dLat = L.LatLng.degreesToRadians(lat2 - lat1);
   const dLon = L.LatLng.degreesToRadians(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(L.LatLng.degreesToRadians(lat1)) * Math.cos(L.LatLng.degreesToRadians(lat2)) *
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(L.LatLng.degreesToRadians(lat1)) * Math.cos(L.LatLng.degreesToRadians(lat2)) * 
     Math.sin(dLon / 2) * Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = R * c;
@@ -36,24 +35,18 @@ const Form = () => {
   const [street, setStreet] = useState('');
   const [showMap, setShowMap] = useState(false);
   const [deliveryMethod, setDeliveryMethod] = useState('courier');
-  const [deliveryPrice, setDeliveryPrice] = useState('');
-  const [selectedLatLng, setSelectedLatLng] = useState(null); // Для збереження координат вибраної локації
+  const [deliveryPrice, setDeliveryPrice] = useState('Розрахунок...');
   const { tg } = useTelegram();
 
   useEffect(() => {
     tg.onEvent('mainButtonClicked', onSendData);
-    return () => {
-      tg.offEvent('mainButtonClicked', onSendData);
-    };
+    return () => tg.offEvent('mainButtonClicked', onSendData);
   }, []);
 
   useEffect(() => {
     tg.MainButton.setParams({ text: 'Відправити дані' });
-    if (!street || !city || !name || numberphone.length !== 13) {
-      tg.MainButton.hide();
-    } else {
-      tg.MainButton.show();
-    }
+    if (!street || !city || !name || numberphone.length !== 13) tg.MainButton.hide();
+    else tg.MainButton.show();
   }, [city, street, name, numberphone]);
 
   const onSendData = useCallback(() => {
@@ -61,14 +54,33 @@ const Form = () => {
     tg.sendData(JSON.stringify(data));
   }, [name, numberphone, city, street, deliveryMethod]);
 
+  const fetchAddress = async (latlng) => {
+    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`);
+    if (!response.ok) throw new Error('Не вдалося отримати адресу');
+    const data = await response.json();
+    return data;
+  };
+
+  const handleLocationSelect = async (latlng) => {
+    const addressData = await fetchAddress(latlng);
+    const streetName = addressData.address.road || addressData.address.pedestrian || '';
+    const houseNumber = addressData.address.house_number || '';
+    const cityOrTown = addressData.address.city || addressData.address.town || addressData.address.village || '';
+    setStreet(`${streetName} ${houseNumber}`.trim());
+    setCity(cityOrTown);
+
+    const distance = calculateDistance(latlng.lat, latlng.lng, centerCoords[0], centerCoords[1]);
+    if (deliveryMethod === 'courier') {
+      setDeliveryPrice(`${(distance * 1).toFixed(2)} грн`); // Припущення: 1 км = 1 грн
+    }
+    setShowMap(false);
+  };
+
   useEffect(() => {
-    if (deliveryMethod === 'courier' && selectedLatLng) {
-      const distance = calculateDistance(centerCoords[0], centerCoords[1], selectedLatLng.lat, selectedLatLng.lng);
-      setDeliveryPrice(`${(distance * 1).toFixed(2)} грн`); // Припустимо, 1 грн за км
-    } else if (deliveryMethod === 'pickup') {
+    if (deliveryMethod === 'pickup') {
       setDeliveryPrice('Безкоштовно');
     }
-  }, [deliveryMethod, selectedLatLng]);
+  }, [deliveryMethod, distance]);
 
   return (
     <div className="form">
@@ -85,16 +97,7 @@ const Form = () => {
         type="tel"
         placeholder="Номер телефону"
         value={numberphone}
-        onChange={e => {
-          let value = e.target.value.replace(/[^\d+]/g, '');
-          if (value && !value.startsWith('+380')) {
-            value = '+380' + value.replace(/\+/g, '');
-          }
-          if (value.length > 13) {
-            value = value.slice(0, 13);
-          }
-          setNumberPhone(value);
-        }}
+        onChange={e => setNumberPhone(e.target.value)}
         pattern="^\+380\d{3}\d{2}\d{2}\d{2}$"
         title="+380XXXXXXXX (де X - цифра від 0 до 9)"
       />
@@ -134,7 +137,7 @@ const Form = () => {
         <div className="map-modal">
           <MapContainer center={centerCoords} zoom={13} scrollWheelZoom={true} style={{ height: '400px', width: '100%' }}>
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            <LocationPicker onLocationSelect={setSelectedLatLng} />
+            <LocationPicker onLocationSelect={handleLocationSelect} />
           </MapContainer>
           <button type="button" onClick={() => setShowMap(false)}>Закрити карту</button>
         </div>
