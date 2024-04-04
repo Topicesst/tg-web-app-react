@@ -113,17 +113,18 @@ const Form = () => {
     };
 
     // Визначення ціни доставки
-    const calculateDeliveryPrice = () => {
-      if (deliveryMethod === 'pickup') {
-          return 'Безкоштовно';
-      } else if (selectedLocation && deliveryMethod === 'courier') {
-          const distance = calculateDistance(48.281255389712804, 25.97772702722112, selectedLocation.lat, selectedLocation.lng);
-          // Базова ціна 20 грн + 1 грн за кожен км
-          const deliveryPrice = 20 + distance.toFixed(2) * 1;
-          return `${deliveryPrice.toFixed(2)} грн`;
-      }
-      return 'Не вибрано місцезнаходження';
-  };
+const calculateDeliveryPrice = () => {
+  if (deliveryMethod === 'pickup') {
+      return 0; // Безкоштовна доставка повертається як 0
+  } else if (selectedLocation && deliveryMethod === 'courier') {
+      const distance = calculateDistance(48.281255389712804, 25.97772702722112, selectedLocation.lat, selectedLocation.lng);
+      // Базова ціна 20 грн + 1 грн за кожен км
+      const deliveryPrice = 20 + distance * 1; // видалив .toFixed(2) для обчислення
+      return deliveryPrice; // повертаємо числове значення
+  }
+  return null; // Якщо місцезнаходження не вибрано, повертаємо null або можемо повертати 0, якщо воно має бути безкоштовним
+};
+
 
     return (
         <div className="form">
@@ -182,9 +183,9 @@ const Form = () => {
                 </div>
             )}
             {/* Відображення ціни доставки та адреси для самовивозу */}
-            <div>Ціна доставки: {calculateDeliveryPrice()}</div>
-            {deliveryMethod === 'pickup' && (
-                <div>Адреса для самовивозу: вулиця Руська, 209-Б, Чернівці, Чернівецька область, Україна</div>
+             <div>Ціна доставки: {deliveryMethod === 'pickup' ? 'Безкоштовно' : `${calculateDeliveryPrice()} грн`}</div>
+             {deliveryMethod === 'pickup' && (
+             <div>Адреса для самовивозу: вулиця Руська, 209-Б, Чернівці, Чернівецька область, Україна</div>
             )}
         </div>
     );
