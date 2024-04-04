@@ -37,7 +37,12 @@ const Form = () => {
         tg.MainButton.setParams({
             text: 'Відправити дані'
         });
-    }, []);
+        if (numberphone.length === 13 && street && city && name) {
+          tg.MainButton.show();
+      } else {
+          tg.MainButton.hide();
+      }
+  }, [city, street, name, numberphone]);
 
     useEffect(() => {
         if (!street || !city || !name || !numberphone) {
