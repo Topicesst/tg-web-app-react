@@ -24,18 +24,15 @@ const Form = () => {
     const { tg } = useTelegram();
 
     const onSendData = useCallback(() => {
-      const deliveryPrice = calculateDeliveryPrice(); // Правильно викликати тут
-      const data = {
-          name,
-          numberphone,
-          city,
-          street,
-          deliveryMethod,
-          deliveryPrice 
-      };
-      tg.sendData(JSON.stringify(data));
-  }, [name, numberphone, city, street, deliveryMethod, selectedLocation]); // замість calculateDeliveryPrice тут має бути selectedLocation
-  
+        const data = {
+            name,
+            numberphone,
+            city,
+            street,
+            deliveryMethod
+        };
+        tg.sendData(JSON.stringify(data));
+    }, [name, numberphone, city, street, deliveryMethod]);
 
     useEffect(() => {
         tg.onEvent('mainButtonClicked', onSendData);
@@ -115,15 +112,15 @@ const Form = () => {
     // Визначення ціни доставки
     const calculateDeliveryPrice = () => {
       if (deliveryMethod === 'pickup') {
-          return 0; // Доставка безкоштовна
+          return 'Безкоштовно';
       } else if (selectedLocation && deliveryMethod === 'courier') {
           const distance = calculateDistance(48.281255389712804, 25.97772702722112, selectedLocation.lat, selectedLocation.lng);
           // Базова ціна 20 грн + 1 грн за кожен км
-          return 20 + distance.toFixed(2) * 1; // Повертаємо як число
+          const deliveryPrice = 20 + distance.toFixed(2) * 1;
+          return `${deliveryPrice.toFixed(2)} грн`;
       }
-      return null; // Якщо місцезнаходження не вибрано
-    };
-    
+      return 'Не вибрано місцезнаходження';
+  };
 
     return (
         <div className="form">
