@@ -136,11 +136,7 @@ const Form = () => {
                 value={street}
                 onChange={onChangeStreet}
             />
-            <select value={subject} onChange={onChangeSubject} className="select">
-                <option value="physical">Фіз. особа</option>
-                <option value="legal">Юр. особа</option>
-            </select>
-
+           
             <button type="button" className="button-select-location" onClick={() => setShowMap(true)}>
                 Вибрати місцезнаходження на карті
             </button>
