@@ -29,21 +29,9 @@ const Form = () => {
   const [numberphone, setNumberPhone] = useState('');
   const [city, setCity] = useState('');
   const [street, setStreet] = useState('');
-  const [deliveryMethod, setDeliveryMethod] = useState('courier');
+  const [subject, setSubject] = useState('physical');
   const [showMap, setShowMap] = useState(false);
   const { tg } = useTelegram();
-
-  useEffect(() => {
-    const shouldBeVisible = name && numberphone && city && street;
-    if (shouldBeVisible) {
-      tg.MainButton.setParams({
-        text: 'Відправити дані',
-      });
-      tg.MainButton.show();
-    } else {
-      tg.MainButton.hide();
-    }
-  }, [name, numberphone, city, street, tg]);
 
   const onSendData = useCallback(() => {
     const data = {
@@ -51,10 +39,17 @@ const Form = () => {
       numberphone,
       city,
       street,
-      deliveryMethod
+      subject
     };
     tg.sendData(JSON.stringify(data));
-  }, [name, numberphone, city, street, deliveryMethod, tg]);
+  }, [name, numberphone, city, street, subject]);
+
+  useEffect(() => {
+    tg.onEvent('mainButtonClicked', onSendData);
+    return () => {
+      tg.offEvent('mainButtonClicked', onSendData);
+    };
+  }, [onSendData]);
 
   const handleLocationSelect = async (latlng) => {
     try {
@@ -66,19 +61,19 @@ const Form = () => {
       setStreet(`${streetName} ${houseNumber}`.trim());
       setCity(cityOrTown);
       
-      setShowMap(false);
+      setShowMap(false); // Закриваємо модальне вікно після вибору місцезнаходження
     } catch (error) {
       console.error('Помилка при отриманні адреси: ', error);
     }
   };
 
   const onChangeNumberPhone = (e) => {
-    let value = e.target.value.replace(/[^\d+]/g, '');
+    let value = e.target.value.replace(/[^\d+]/g, ''); // Видаляємо все, крім цифр і знака плюс
     if (value && !value.startsWith('+380')) {
-        value = '+380' + value.replace(/\+/g, '');
+        value = '+380' + value.replace(/\+/g, ''); // Видаляємо зайві знаки плюс
     }
     if (value.length > 13) {
-        value = value.slice(0, 13);
+        value = value.slice(0, 13); // Обмежуємо довжину введення
     }
     setNumberPhone(value);
   };
@@ -116,18 +111,17 @@ const Form = () => {
         value={street}
         onChange={(e) => setStreet(e.target.value)}
       />
+      <select
+        className="select"
+        value={subject}
+        onChange={(e) => setSubject(e.target.value)}
+      >
+        <option value="physical">Фізична особа</option>
+        <option value="legal">Юридична особа</option>
+      </select>
       <button type="button" className="button-select-location" onClick={() => setShowMap(true)}>
         Вибрати місцезнаходження на карті
       </button>
-      <label className="delivery-label">Доставка:</label>
-      <select
-        className="select select-delivery"
-        value={deliveryMethod}
-        onChange={(e) => setDeliveryMethod(e.target.value)}
-      >
-        <option value="courier">Кур'єр</option>
-        <option value="pickup">Самовивіз</option>
-      </select>
       {showMap && (
         <div className="map-modal">
           <MapContainer center={[50.4501, 30.5234]} zoom={13} scrollWheelZoom={true} style={{ height: '400px', width: '100%' }}>
