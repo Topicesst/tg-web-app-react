@@ -23,11 +23,6 @@ const Form = () => {
     const [deliveryMethod, setDeliveryMethod] = useState('courier');
     const { tg } = useTelegram();
 
-    const onChangeDeliveryMethod = (e) => {
-        setDeliveryMethod(e.target.value);
-        console.log('Метод доставки:', e.target.value); // Додайте цей рядок
-    };
-
     const onSendData = useCallback(() => {
       const deliveryPrice = calculateDeliveryPrice();
       const data = {
@@ -39,14 +34,15 @@ const Form = () => {
           deliveryPrice
       };
       tg.sendData(JSON.stringify(data));
-    }, [name, numberphone, city, street, deliveryMethod, selectedLocation, tg]);
+    }, [name, numberphone, city, street, deliveryMethod, selectedLocation]);
+    
 
     useEffect(() => {
         tg.onEvent('mainButtonClicked', onSendData);
         return () => {
             tg.offEvent('mainButtonClicked', onSendData);
         };
-    }, [onSendData, tg]);
+    }, [onSendData]);
 
     useEffect(() => {
         tg.MainButton.setParams({
@@ -57,7 +53,7 @@ const Form = () => {
         } else {
             tg.MainButton.show();
         }
-    }, [city, street, name, numberphone, tg]);
+    }, [city, street, name, numberphone]);
 
     const onChangeName = (e) => {
         setName(e.target.value);
@@ -111,7 +107,8 @@ const Form = () => {
     };
 
     const calculateDistance = (lat1, lon1, lat2, lon2) => {
-        return Math.sqrt(Math.pow(lat2 - lat1, 2) + Math.pow(lon2 - lon1, 2)) * 111;
+        // Ваша реалізація обчислення відстані
+        return Math.sqrt(Math.pow(lat2 - lat1, 2) + Math.pow(lon2 - lon1, 2)) * 111; // Прикладна формула
     };
 
     const calculateDeliveryPrice = () => {
@@ -165,7 +162,7 @@ const Form = () => {
             <select
                 className="select select-delivery"
                 value={deliveryMethod}
-                onChange={onChangeDeliveryMethod}
+                onChange={(e) => setDeliveryMethod(e.target.value)}
             >
                 <option value="courier">Кур'єр</option>
                 <option value="pickup">Самовивіз</option>
