@@ -18,6 +18,7 @@ const Form = () => {
     const [numberphone, setNumberPhone] = useState('');
     const [city, setCity] = useState('');
     const [street, setStreet] = useState('');
+    const [selectedLocation, setSelectedLocation] = useState(null); // Додано для зберігання вибраної локації
     const [showMap, setShowMap] = useState(false);
     const [deliveryMethod, setDeliveryMethod] = useState('courier');
     const { tg } = useTelegram();
@@ -74,27 +75,8 @@ const Form = () => {
         setStreet(e.target.value);
     };
 
-    function LocationPicker({ onLocationSelect }) {
-      useMapEvents({
-        click(e) {
-          onLocationSelect(e.latlng);
-        },
-      });
-      return null;
-    }
-
-    const fetchAddress = async (latlng) => {
-        const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`
-        );
-        if (!response.ok) {
-            throw new Error('Не вдалося отримати адресу');
-        }
-        const data = await response.json();
-        return data;
-    };
-
     const handleLocationSelect = async (latlng) => {
+        setSelectedLocation(latlng); // Зберігання координат вибраної локації
         try {
             const addressData = await fetchAddress(latlng);
             const streetName = addressData.address.road || addressData.address.pedestrian || '';
@@ -108,6 +90,34 @@ const Form = () => {
         } catch (error) {
             console.error('Помилка при отриманні адреси: ', error);
         }
+    };
+
+    const fetchAddress = async (latlng) => {
+        const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`
+        );
+        if (!response.ok) {
+            throw new Error('Не вдалося отримати адресу');
+        }
+        const data = await response.json();
+        return data;
+    };
+
+    // Розрахунок відстані
+    const calculateDistance = (lat1, lon1, lat2, lon2) => {
+        // Ваша реалізація обчислення відстані
+        return Math.sqrt(Math.pow(lat2 - lat1, 2) + Math.pow(lon2 - lon1, 2)) * 111; // Прикладна формула
+    };
+
+    // Визначення ціни доставки
+    const calculateDeliveryPrice = () => {
+        if (deliveryMethod === 'pickup') {
+            return 'Безкоштовно';
+        } else if (selectedLocation && deliveryMethod === 'courier') {
+            const distance = calculateDistance(48.281255389712804, 25.97772702722112, selectedLocation.lat, selectedLocation.lng);
+            return `${distance.toFixed(2) * 1} грн`; // Кожен км +1 грн
+        }
+        return 'Не вибрано місцезнаходження';
     };
 
     return (
@@ -161,11 +171,15 @@ const Form = () => {
                         <TileLayer
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
-                        {/* Припускаємо, що LocationPicker - це ваш кастомний компонент */}
                         <LocationPicker onLocationSelect={handleLocationSelect} />
                     </MapContainer>
                     <button type="button" onClick={() => setShowMap(false)}>Закрити карту</button>
                 </div>
+            )}
+            {/* Відображення ціни доставки та адреси для самовивозу */}
+            <div>Ціна доставки: {calculateDeliveryPrice()}</div>
+            {deliveryMethod === 'pickup' && (
+                <div>Адреса для самовивозу: вулиця Руська, 209-Б, Чернівці, Чернівецька область, Україна</div>
             )}
         </div>
     );
