@@ -47,8 +47,15 @@ const Form = () => {
     }
 
     const onChangeNumberPhone = (e) => {
-        setNumberPhone(e.target.value)
-    }
+      let value = e.target.value.replace(/[^\d+]/g, '');
+      if (value && !value.startsWith('+380')) {
+          value = '+380' + value.replace(/\+/g, '');
+      }
+      if (value.length > 13) {
+          value = value.slice(0, 13);
+      }
+      setNumberPhone(value);
+    };
 
     const onChangeCountry = (e) => {
         setCountry(e.target.value)
