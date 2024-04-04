@@ -111,13 +111,14 @@ const Form = () => {
         value={street}
         onChange={(e) => setStreet(e.target.value)}
       />
+      <h4>Доставка:</h4> {/* Доданий заголовок */}
       <select
         className="select"
         value={subject}
         onChange={(e) => setSubject(e.target.value)}
       >
-        <option value="physical">Фізична особа</option>
-        <option value="legal">Юридична особа</option>
+        <option value="courier">Кур'єр</option>
+        <option value="pickup">Самовивіз</option>
       </select>
       <button type="button" className="button-select-location" onClick={() => setShowMap(true)}>
         Вибрати місцезнаходження на карті
