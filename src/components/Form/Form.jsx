@@ -73,11 +73,13 @@ const Form = () => {
                 onChange={onChangeName}
             />
             <input
-                className={'input'}
-                type="text"
-                placeholder={'Номер телефону'}
-                value={numberphone}
-                onChange={onChangeNumberPhone}
+               className="input"
+               type="tel"
+               placeholder="Номер телефону"
+               value={numberphone}
+               onChange={onChangeNumberPhone}
+               pattern="^\+380\d{3}\d{2}\d{2}\d{2}$"
+               title="+380XXXXXXXX (де X - цифра від 0 до 9)"
             />
             <input
                 className={'input'}
