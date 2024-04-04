@@ -29,10 +29,11 @@ const Form = () => {
             numberphone,
             city,
             street,
-            deliveryMethod
+            deliveryMethod,
+            deliveryPrice
         };
         tg.sendData(JSON.stringify(data));
-    }, [name, numberphone, city, street, deliveryMethod]);
+    }, [name, numberphone, city, street, deliveryMethod, calculateDeliveryPrice]);
 
     useEffect(() => {
         tg.onEvent('mainButtonClicked', onSendData);
