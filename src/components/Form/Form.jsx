@@ -236,7 +236,7 @@ const Form = () => {
                 </div>
             )}
             <div>Ціна доставки: {calculateDeliveryPrice()}</div>
-            <div>Середній час доставки: {calculateDeliveryTime()}</div>
+            <div>Приблизний час доставки: {calculateDeliveryTime()}</div>
             {deliveryMethod === 'pickup' && (
                 <div>Адреса для самовивозу: вулиця Руська, 209-Б, Чернівці, Чернівецька область, Україна</div>
             )}
