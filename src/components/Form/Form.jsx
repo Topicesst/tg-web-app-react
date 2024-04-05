@@ -127,7 +127,8 @@ const Form = () => {
     if (selectedLocation && deliveryMethod === 'courier') {
         const distance = calculateDistance(48.281255389712804, 25.97772702722112, selectedLocation.lat, selectedLocation.lng);
         const timeHours = distance / 40; // Відстань ділимо на швидкість
-        const totalTimeInMinutes = Math.round(timeHours * 60); // Перетворення часу в хвилини
+        // Додаємо 10 хвилин до загального часу доставки
+        const totalTimeInMinutes = Math.round(timeHours * 60) + 10; // Перетворення часу в хвилини та додавання 10 хвилин
 
         const hours = Math.floor(totalTimeInMinutes / 60); // Повні години
         const minutes = totalTimeInMinutes % 60; // Залишкові хвилини
@@ -141,6 +142,7 @@ const Form = () => {
     }
     return 'Не вибрано місцезнаходження або метод доставки';
 };
+
 
 return (
     <div className="form">
