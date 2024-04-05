@@ -76,6 +76,27 @@ const Form = () => {
         }
     }, [city, street, name, numberphone]);
 
+    useEffect(() => {
+        // Зберігати дані при зміні
+        const formData = { name, numberphone, city, street, selectedLocation, deliveryMethod };
+        localStorage.setItem('formData', JSON.stringify(formData));
+    }, [name, numberphone, city, street, selectedLocation, deliveryMethod]);
+    
+    useEffect(() => {
+        // Відновлювати збережені дані при ініціалізації
+        const storedData = localStorage.getItem('formData');
+        if (storedData) {
+            const { name, numberphone, city, street, selectedLocation, deliveryMethod } = JSON.parse(storedData);
+            setName(name);
+            setNumberPhone(numberphone);
+            setCity(city);
+            setStreet(street);
+            setSelectedLocation(selectedLocation);
+            setDeliveryMethod(deliveryMethod);
+        }
+    }, []);
+    
+
     const onChangeName = (e) => setName(e.target.value);
     const onChangeCity = (e) => setCity(e.target.value);
     const onChangeStreet = (e) => setStreet(e.target.value);
