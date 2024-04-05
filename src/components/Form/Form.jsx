@@ -152,7 +152,7 @@ const Form = () => {
             if (minutes > 0) timeString += `${minutes} хвилин${minutes > 1 ? 'и' : ''}`;
             if (timeString === '') return 'Менше хвилини';
 
-            return `Приблизно ${timeString.trim()}`;
+            return `${timeString.trim()}`;
         }
         return 'Не вибрано місцезнаходження або метод доставки';
     };
