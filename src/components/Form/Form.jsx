@@ -69,7 +69,7 @@ const Form = () => {
         tg.MainButton.setParams({
             text: 'Відправити дані'
         });
-        if (!street || !city || !name || !numberphone.startsWith('+380') || numberphone.length !== 13) {
+        if (!street || !city || !name || numberphone.length !== 13) {
             tg.MainButton.hide();
         } else {
             tg.MainButton.show();
