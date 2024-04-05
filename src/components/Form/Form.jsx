@@ -77,7 +77,6 @@ const Form = () => {
     }, [city, street, name, numberphone]);
 
     const onChangeName = (e) => setName(e.target.value);
-    const onChangeNumberPhone = (e) => setNumberPhone(e.target.value.replace(/[^\d+]/g, '').slice(0, 13));
     const onChangeCity = (e) => setCity(e.target.value);
     const onChangeStreet = (e) => setStreet(e.target.value);
 
@@ -136,6 +135,14 @@ const Form = () => {
         }
         return 'Не вибрано місцезнаходження або метод доставки';
     };
+
+    const onChangeNumberPhone = (e) => {
+        let input = e.target.value.replace(/[^\d]/g, ''); // Видалити всі нечислові символи
+        if (!input.startsWith('380')) {
+          input = '380' + input; // Додати префікс, якщо відсутній
+        }
+        setNumberPhone('+' + input.slice(0, 12)); // Обмежити довжину та додати '+'
+      };
 
     return (
         <div className="form">
