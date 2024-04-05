@@ -124,11 +124,20 @@ const Form = () => {
   };
 
   const calculateDeliveryTime = () => {
-    // Припускаємо, що середня швидкість кур'єра становить 40 км/год
     if (selectedLocation && deliveryMethod === 'courier') {
         const distance = calculateDistance(48.281255389712804, 25.97772702722112, selectedLocation.lat, selectedLocation.lng);
         const timeHours = distance / 40; // Відстань ділимо на швидкість
-        return `${timeHours.toFixed(2)} годин`;
+        const totalTimeInMinutes = Math.round(timeHours * 60); // Перетворення часу в хвилини
+
+        const hours = Math.floor(totalTimeInMinutes / 60); // Повні години
+        const minutes = totalTimeInMinutes % 60; // Залишкові хвилини
+
+        let timeString = '';
+        if (hours > 0) timeString += `${hours} година${hours > 1 ? 'и' : ''} `;
+        if (minutes > 0) timeString += `${minutes} хвилин${minutes > 1 ? 'и' : ''}`;
+        if (timeString === '') return 'Менше хвилини';
+
+        return `Приблизно ${timeString.trim()}`;
     }
     return 'Не вибрано місцезнаходження або метод доставки';
 };
