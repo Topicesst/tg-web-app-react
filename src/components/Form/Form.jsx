@@ -25,6 +25,7 @@ const Form = () => {
 
     const onSendData = useCallback(() => {
       const deliveryPrice = calculateDeliveryPrice();
+      const deliveryTime = calculateDeliveryTime();
       const data = {
           name,
           numberphone,
@@ -35,7 +36,7 @@ const Form = () => {
           deliveryTime
       };
       tg.sendData(JSON.stringify(data));
-    }, [name, numberphone, city, street, deliveryMethod, selectedLocation]);
+    }, [name, numberphone, city, street, deliveryMethod, selectedLocation, calculateDeliveryPrice, calculateDeliveryTime]);
     
 
     useEffect(() => {
@@ -78,6 +79,26 @@ const Form = () => {
     const onChangeStreet = (e) => {
         setStreet(e.target.value);
     };
+
+    useEffect(() => {
+        const updateLocationFromAddress = async () => {
+          if (!city || !street) return;
+      
+          try {
+            const response = await fetch(
+              `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(street)},+${encodeURIComponent(city)}`
+            );
+            const data = await response.json();
+            if (data && data.length > 0) {
+              setSelectedLocation({ lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) });
+            }
+          } catch (error) {
+            console.error('Error obtaining coordinates:', error);
+          }
+        };
+      
+        updateLocationFromAddress();
+      }, [city, street]);
 
     const handleLocationSelect = async (latlng) => {
         setSelectedLocation(latlng);
