@@ -31,7 +31,8 @@ const Form = () => {
           city,
           street,
           deliveryMethod,
-          deliveryPrice
+          deliveryPrice,
+          deliveryTime
       };
       tg.sendData(JSON.stringify(data));
     }, [name, numberphone, city, street, deliveryMethod, selectedLocation]);
@@ -122,68 +123,79 @@ const Form = () => {
       return 'Не вибрано місцезнаходження';
   };
 
-    return (
-        <div className="form">
-            <h3>Введіть ваші дані:</h3>
-            <input
-                className="input"
-                type="text"
-                placeholder="ПІБ"
-                value={name}
-                onChange={onChangeName}
-            />
-            <input
-                className="input"
-                type="tel"
-                placeholder="Номер телефону"
-                value={numberphone}
-                onChange={onChangeNumberPhone}
-                pattern="^\+380\d{3}\d{2}\d{2}\d{2}$"
-                title="+380XXXXXXXX (де X - цифра від 0 до 9)"
-            />
-            <input
-                className="input"
-                type="text"
-                placeholder="Місто"
-                value={city}
-                onChange={onChangeCity}
-            />
-            <input
-                className="input"
-                type="text"
-                placeholder="Вулиця"
-                value={street}
-                onChange={onChangeStreet}
-            />
-            <button type="button" className="button-select-location" onClick={() => setShowMap(true)}>
-                Вибрати місцезнаходження на карті
-            </button>
-            <label className="delivery-label">Доставка:</label>
-            <select
-                className="select select-delivery"
-                value={deliveryMethod}
-                onChange={(e) => setDeliveryMethod(e.target.value)}
-            >
-                <option value="courier">Кур'єр</option>
-                <option value="pickup">Самовивіз</option>
-            </select>
-            {showMap && (
-                <div className="map-modal">
-                    <MapContainer center={[48.281255389712804, 25.97772702722112]} zoom={13} scrollWheelZoom={true} style={{ height: '400px', width: '100%' }}>
-                        <TileLayer
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
-                        <LocationPicker onLocationSelect={handleLocationSelect} />
-                    </MapContainer>
-                    <button type="button" onClick={() => setShowMap(false)}>Закрити карту</button>
-                </div>
-            )}
-            <div>Ціна доставки: {calculateDeliveryPrice()}</div>
-            {deliveryMethod === 'pickup' && (
-                <div>Адреса для самовивозу: вулиця Руська, 209-Б, Чернівці, Чернівецька область, Україна</div>
-            )}
-        </div>
-    );
+  const calculateDeliveryTime = () => {
+    // Припускаємо, що середня швидкість кур'єра становить 40 км/год
+    if (selectedLocation && deliveryMethod === 'courier') {
+        const distance = calculateDistance(48.281255389712804, 25.97772702722112, selectedLocation.lat, selectedLocation.lng);
+        const timeHours = distance / 40; // Відстань ділимо на швидкість
+        return `${timeHours.toFixed(2)} годин`;
+    }
+    return 'Не вибрано місцезнаходження або метод доставки';
+};
+
+return (
+    <div className="form">
+        <h3>Введіть ваші дані:</h3>
+        <input
+            className="input"
+            type="text"
+            placeholder="ПІБ"
+            value={name}
+            onChange={onChangeName}
+        />
+        <input
+            className="input"
+            type="tel"
+            placeholder="Номер телефону"
+            value={numberphone}
+            onChange={onChangeNumberPhone}
+            pattern="^\+380\d{3}\d{2}\d{2}\d{2}$"
+            title="+380XXXXXXXX (де X - цифра від 0 до 9)"
+        />
+        <input
+            className="input"
+            type="text"
+            placeholder="Місто"
+            value={city}
+            onChange={onChangeCity}
+        />
+        <input
+            className="input"
+            type="text"
+            placeholder="Вулиця"
+            value={street}
+            onChange={onChangeStreet}
+        />
+        <button type="button" className="button-select-location" onClick={() => setShowMap(true)}>
+            Вибрати місцезнаходження на карті
+        </button>
+        <label className="delivery-label">Доставка:</label>
+        <select
+            className="select select-delivery"
+            value={deliveryMethod}
+            onChange={(e) => setDeliveryMethod(e.target.value)}
+        >
+            <option value="courier">Кур'єр</option>
+            <option value="pickup">Самовивіз</option>
+        </select>
+        {showMap && (
+            <div className="map-modal">
+                <MapContainer center={[48.281255389712804, 25.97772702722112]} zoom={13} scrollWheelZoom={true} style={{ height: '400px', width: '100%' }}>
+                    <TileLayer
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    <LocationPicker onLocationSelect={handleLocationSelect} />
+                </MapContainer>
+                <button type="button" onClick={() => setShowMap(false)}>Закрити карту</button>
+            </div>
+        )}
+        <div>Ціна доставки: {calculateDeliveryPrice()}</div>
+        <div>Середній час доставки: {calculateDeliveryTime()}</div>
+        {deliveryMethod === 'pickup' && (
+            <div>Адреса для самовивозу: вулиця Руська, 209-Б, Чернівці, Чернівецька область, Україна</div>
+        )}
+    </div>
+   );
 };
 
 export default Form;
