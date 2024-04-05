@@ -143,20 +143,34 @@ const Form = () => {
             const distance = calculateDistance(48.281255389712804, 25.97772702722112, selectedLocation.lat, selectedLocation.lng);
             const timeHours = distance / 40;
             const totalTimeInMinutes = Math.round(timeHours * 60) + 10;
-
+    
             const hours = Math.floor(totalTimeInMinutes / 60);
             const minutes = totalTimeInMinutes % 60;
-
+    
+            // Функція для визначення правильної форми слова "година"
+            const getHourForm = (num) => {
+                if (num === 1) return 'година';
+                if (num >= 2 && num <= 4) return 'години';
+                return 'годин';
+            };
+    
+            // Функція для визначення правильної форми слова "хвилина"
+            const getMinuteForm = (num) => {
+                if (num % 10 === 1 && num % 100 !== 11) return 'хвилина';
+                if (num % 10 >= 2 && num % 10 <= 4 && (num % 100 < 10 || num % 100 >= 20)) return 'хвилини';
+                return 'хвилин';
+            };
+    
             let timeString = '';
-            if (hours > 0) timeString += `${hours} година${hours > 1 ? 'и' : ''} `;
-            if (minutes > 0) timeString += `${minutes} хвилин${minutes > 1 ? 'и' : ''}`;
+            if (hours > 0) timeString += `${hours} ${getHourForm(hours)} `;
+            if (minutes > 0) timeString += `${minutes} ${getMinuteForm(minutes)}`;
             if (timeString === '') return 'Менше хвилини';
-
+    
             return `${timeString.trim()}`;
         }
         return 'Не вибрано місцезнаходження або метод доставки';
     };
-
+    
     const onChangeNumberPhone = (e) => {
         let input = e.target.value.replace(/[^\d]/g, ''); // Видалити всі нечислові символи
         if (!input.startsWith('380')) {
