@@ -47,16 +47,17 @@ const Form = () => {
         const deliveryPrice = calculateDeliveryPrice();
         const deliveryTime = calculateDeliveryTime();
         const data = {
-            name,
-            numberphone,
-            city,
-            street,
-            deliveryMethod,
-            deliveryPrice: deliveryPrice.toFixed(2), // перетворити число на рядок тут, якщо потрібно відправити як текст
-            deliveryTime
+          name,
+          numberphone,
+          city,
+          street,
+          deliveryMethod,
+          deliveryPrice, // Тут вже буде число
+          deliveryTime
         };
         tg.sendData(JSON.stringify(data));
-    }, [name, numberphone, city, street, deliveryMethod, selectedLocation]);
+      }, [name, numberphone, city, street, deliveryMethod, selectedLocation]);
+      
     
 
     useEffect(() => {
@@ -130,13 +131,15 @@ const Form = () => {
 
     const calculateDeliveryPrice = () => {
         if (deliveryMethod === 'pickup') {
-            return 0; // повернути як число
+          return 0; // Числове значення для безкоштовної доставки
         } else if (selectedLocation && deliveryMethod === 'courier') {
-            const distance = calculateDistance(48.281255389712804, 25.97772702722112, selectedLocation.lat, selectedLocation.lng);
-            return 20 + distance * 1; // повернути як число
+          const distance = calculateDistance(48.281255389712804, 25.97772702722112, selectedLocation.lat, selectedLocation.lng);
+          const deliveryPrice = 20 + distance * 1; // Початкова вартість доставки плюс залежно від відстані
+          return parseFloat(deliveryPrice.toFixed(2)); // Повернути як числове значення з двома знаками після коми
         }
-        return 0;
-    };
+        return 0; // Числове значення, якщо місцезнаходження не вибрано
+      };
+      
 
     const calculateDeliveryTime = () => {
         if (selectedLocation && deliveryMethod === 'courier') {
