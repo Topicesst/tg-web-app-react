@@ -44,19 +44,19 @@ const Form = () => {
     }, [city, street]);
 
     const onSendData = useCallback(() => {
-        const deliveryPrice = calculateDeliveryPrice();
-        const deliveryTime = calculateDeliveryTime();
         const data = {
             name,
             numberphone,
             city,
             street,
+            selectedLocation,
             deliveryMethod,
-            deliveryPrice,
-            deliveryTime
+            deliveryPrice, // тепер передаємо вартість доставки як частину даних
+            deliveryTime: calculateDeliveryTime()
         };
         tg.sendData(JSON.stringify(data));
-    }, [name, numberphone, city, street, deliveryMethod, selectedLocation]);
+      }, [name, numberphone, city, street, selectedLocation, deliveryMethod, deliveryPrice]);
+      
 
     useEffect(() => {
         tg.onEvent('mainButtonClicked', onSendData);
@@ -82,6 +82,10 @@ const Form = () => {
         localStorage.setItem('formData', JSON.stringify(formData));
     }, [name, numberphone, city, street, selectedLocation, deliveryMethod]);
     
+    useEffect(() => {
+        setDeliveryPrice(calculateDeliveryPrice());
+      }, [selectedLocation, deliveryMethod]);
+      
     useEffect(() => {
         // Відновлювати збережені дані при ініціалізації
         const storedData = localStorage.getItem('formData');
@@ -126,6 +130,8 @@ const Form = () => {
     };
 
     const calculateDistance = (lat1, lon1, lat2, lon2) => Math.sqrt(Math.pow(lat2 - lat1, 2) + Math.pow(lon2 - lon1, 2)) * 111;
+
+    const [deliveryPrice, setDeliveryPrice] = useState('');
 
     const calculateDeliveryPrice = () => {
         if (deliveryMethod === 'pickup') {
@@ -172,12 +178,11 @@ const Form = () => {
     };
     
     const onChangeNumberPhone = (e) => {
-        let input = e.target.value.replace(/[^\d]/g, ''); // Видалити всі нечислові символи
-        if (!input.startsWith('380')) {
-          input = '380' + input; // Додати префікс, якщо відсутній
-        }
-        setNumberPhone('+' + input.slice(0, 12)); // Обмежити довжину та додати '+'
+        const input = e.target.value.replace(/[^\d]/g, '');
+        const prefixedInput = input.startsWith('380') ? input : `380${input}`;
+        setNumberPhone(`+${prefixedInput.slice(0, 12)}`);
       };
+      
 
     return (
         <div className="form">
