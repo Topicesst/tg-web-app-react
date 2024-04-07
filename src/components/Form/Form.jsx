@@ -3,7 +3,6 @@ import './Form.css';
 import { useTelegram } from "../../hooks/useTelegram";
 import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { addDoc, collection } from 'firebase/firestore';
 
 function LocationPicker({ onLocationSelect }) {
     useMapEvents({
@@ -44,31 +43,20 @@ const Form = () => {
         updateLocationFromAddress();
     }, [city, street]);
 
-const onSendData = useCallback(async () => {
-    const deliveryPrice = calculateDeliveryPrice();
-    const deliveryTime = calculateDeliveryTime();
-    const data = {
-        name,
-        numberphone,
-        city,
-        street,
-        deliveryMethod,
-        deliveryPrice, // Тут вже буде число
-        deliveryTime
-    };
-
-    // Отримання посилання на колекцію "orders"
-    const ordersCollectionRef = collection(db, 'orders');
-
-    try {
-        // Додавання нового документа з даними до колекції "orders"
-        await addDoc(ordersCollectionRef, data);
-        console.log("Document successfully written!");
-    } catch (error) {
-        console.error("Error writing document: ", error);
-    }
-}, [name, numberphone, city, street, deliveryMethod, selectedLocation]);
-
+    const onSendData = useCallback(() => {
+        const deliveryPrice = calculateDeliveryPrice();
+        const deliveryTime = calculateDeliveryTime();
+        const data = {
+            name,
+            numberphone,
+            city,
+            street,
+            deliveryMethod,
+            deliveryPrice,
+            deliveryTime
+        };
+        tg.sendData(JSON.stringify(data));
+    }, [name, numberphone, city, street, deliveryMethod, selectedLocation]);
 
     useEffect(() => {
         tg.onEvent('mainButtonClicked', onSendData);
@@ -141,15 +129,14 @@ const onSendData = useCallback(async () => {
 
     const calculateDeliveryPrice = () => {
         if (deliveryMethod === 'pickup') {
-          return 0; // Числове значення для безкоштовної доставки
+            return 'Безкоштовно';
         } else if (selectedLocation && deliveryMethod === 'courier') {
-          const distance = calculateDistance(48.281255389712804, 25.97772702722112, selectedLocation.lat, selectedLocation.lng);
-          const deliveryPrice = 20 + distance * 1; // Початкова вартість доставки плюс залежно від відстані
-          return parseFloat(deliveryPrice.toFixed(2)); // Повернути як числове значення з двома знаками після коми
+            const distance = calculateDistance(48.281255389712804, 25.97772702722112, selectedLocation.lat, selectedLocation.lng);
+            const deliveryPrice = 20 + distance * 1;
+            return `${deliveryPrice.toFixed(2)} грн`;
         }
-        return 0; // Числове значення, якщо місцезнаходження не вибрано
-      };
-      
+        return 'Не вибрано місцезнаходження';
+    };
 
     const calculateDeliveryTime = () => {
         if (selectedLocation && deliveryMethod === 'courier') {
