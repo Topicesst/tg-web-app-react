@@ -3,6 +3,7 @@ import './Form.css';
 import { useTelegram } from "../../hooks/useTelegram";
 import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import { addDoc, collection } from 'firebase/firestore';
 
 function LocationPicker({ onLocationSelect }) {
     useMapEvents({
@@ -43,22 +44,31 @@ const Form = () => {
         updateLocationFromAddress();
     }, [city, street]);
 
-    const onSendData = useCallback(() => {
-        const deliveryPrice = calculateDeliveryPrice();
-        const deliveryTime = calculateDeliveryTime();
-        const data = {
-          name,
-          numberphone,
-          city,
-          street,
-          deliveryMethod,
-          deliveryPrice, // Тут вже буде число
-          deliveryTime
-        };
-        tg.sendData(JSON.stringify(data));
-      }, [name, numberphone, city, street, deliveryMethod, selectedLocation]);
-      
-    
+const onSendData = useCallback(async () => {
+    const deliveryPrice = calculateDeliveryPrice();
+    const deliveryTime = calculateDeliveryTime();
+    const data = {
+        name,
+        numberphone,
+        city,
+        street,
+        deliveryMethod,
+        deliveryPrice, // Тут вже буде число
+        deliveryTime
+    };
+
+    // Отримання посилання на колекцію "orders"
+    const ordersCollectionRef = collection(db, 'orders');
+
+    try {
+        // Додавання нового документа з даними до колекції "orders"
+        await addDoc(ordersCollectionRef, data);
+        console.log("Document successfully written!");
+    } catch (error) {
+        console.error("Error writing document: ", error);
+    }
+}, [name, numberphone, city, street, deliveryMethod, selectedLocation]);
+
 
     useEffect(() => {
         tg.onEvent('mainButtonClicked', onSendData);
