@@ -51,7 +51,7 @@ const Form = () => {
     // Збірка даних для відправлення
     const data = {
         name,
-        numberphone, // Увага: У вашому коді це поле називається 'numberphone', але у бекенді ви очікуєте 'phone'
+        numberphone, 
         city,
         street,
         deliveryMethod,
