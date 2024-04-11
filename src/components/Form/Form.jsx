@@ -43,20 +43,29 @@ const Form = () => {
         updateLocationFromAddress();
     }, [city, street]);
 
-    const onSendData = useCallback(() => {
-        const deliveryPrice = calculateDeliveryPrice();
-        const deliveryTime = calculateDeliveryTime();
-        const data = {
-            name,
-            numberphone,
-            city,
-            street,
-            deliveryMethod,
-            deliveryPrice,
-            deliveryTime
-        };
-        tg.sendData(JSON.stringify(data));
-    }, [name, numberphone, city, street, deliveryMethod, selectedLocation]);
+   const onSendData = useCallback(() => {
+    // Обчислення ціни доставки та часу доставки
+    const deliveryPrice = calculateDeliveryPrice();
+    const deliveryTime = calculateDeliveryTime();
+
+    // Збірка даних для відправлення
+    const data = {
+        name,
+        numberphone, // Увага: У вашому коді це поле називається 'numberphone', але у бекенді ви очікуєте 'phone'
+        city,
+        street,
+        deliveryMethod,
+        deliveryPrice,
+        deliveryTime,
+    };
+
+    // Логування даних перед відправленням
+    console.log('Дані, які відправляються:', data);
+
+    // Відправка даних
+    tg.sendData(JSON.stringify(data));
+}, [name, numberphone, city, street, deliveryMethod, selectedLocation]);
+
 
     useEffect(() => {
         tg.onEvent('mainButtonClicked', onSendData);
