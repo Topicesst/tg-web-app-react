@@ -44,11 +44,9 @@ const Form = () => {
     }, [city, street]);
 
    const onSendData = useCallback(() => {
-    // Обчислення ціни доставки та часу доставки
     const deliveryPrice = calculateDeliveryPrice();
     const deliveryTime = calculateDeliveryTime();
 
-    // Збірка даних для відправлення
     const data = {
         name,
         numberphone, 
@@ -59,10 +57,8 @@ const Form = () => {
         deliveryTime,
     };
 
-    // Логування даних перед відправленням
     console.log('Дані, які відправляються:', data);
 
-    // Відправка даних
     tg.sendData(JSON.stringify(data));
 }, [name, numberphone, city, street, deliveryMethod, selectedLocation]);
 
@@ -86,13 +82,11 @@ const Form = () => {
     }, [city, street, name, numberphone]);
 
     useEffect(() => {
-        // Зберігати дані при зміні
         const formData = { name, numberphone, city, street, selectedLocation, deliveryMethod };
         localStorage.setItem('formData', JSON.stringify(formData));
     }, [name, numberphone, city, street, selectedLocation, deliveryMethod]);
     
     useEffect(() => {
-        // Відновлювати збережені дані при ініціалізації
         const storedData = localStorage.getItem('formData');
         if (storedData) {
             const { name, numberphone, city, street, selectedLocation, deliveryMethod } = JSON.parse(storedData);
@@ -156,14 +150,12 @@ const Form = () => {
             const hours = Math.floor(totalTimeInMinutes / 60);
             const minutes = totalTimeInMinutes % 60;
     
-            // Функція для визначення правильної форми слова "година"
             const getHourForm = (num) => {
                 if (num === 1) return 'година';
                 if (num >= 2 && num <= 4) return 'години';
                 return 'годин';
             };
     
-            // Функція для визначення правильної форми слова "хвилина"
             const getMinuteForm = (num) => {
                 if (num % 10 === 1 && num % 100 !== 11) return 'хвилина';
                 if (num % 10 >= 2 && num % 10 <= 4 && (num % 100 < 10 || num % 100 >= 20)) return 'хвилини';
@@ -181,11 +173,11 @@ const Form = () => {
     };
     
     const onChangeNumberPhone = (e) => {
-        let input = e.target.value.replace(/[^\d]/g, ''); // Видалити всі нечислові символи
+        let input = e.target.value.replace(/[^\d]/g, ''); 
         if (!input.startsWith('380')) {
-          input = '380' + input; // Додати префікс, якщо відсутній
+          input = '380' + input; 
         }
-        setNumberPhone('+' + input.slice(0, 12)); // Обмежити довжину та додати '+'
+        setNumberPhone('+' + input.slice(0, 12)); 
       };
 
     return (
