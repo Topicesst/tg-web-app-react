@@ -3,11 +3,11 @@ import Button from "../Button/Button";
 import './ProductItem.css';
 
 const ProductItem = ({ product, className, onAdd }) => {
-    const [isAdded, setIsAdded] = useState(false); // Додавання стану для відстеження доданого товару
+    const [isAdded, setIsAdded] = useState(false); 
 
     const onAddHandler = () => {
         onAdd(product);
-        setIsAdded(!isAdded); // Зміна стану при натисканні кнопки
+        setIsAdded(!isAdded); 
     }
 
     return (
