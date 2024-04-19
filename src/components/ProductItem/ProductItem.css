@@ -1,63 +1,54 @@
 
 
-/* Стилі для карточки товару */
 .product {
-    display: flex; /* Встановлення відображення карточки як блоку */
-    flex-direction: column; /* Встановлення напрямку відображення елементів у стовпчик */
-    justify-content: space-between; /* Вирівнювання елементів по вертикалі */
-    width: 170px; /* Встановлення ширини карточки */
-    border: 1px solid var(--tg-theme-button-color); /* Встановлення межі з кольором змінної --tg-theme-button-color */
-    padding: 15px; /* Встановлення внутрішніх відступів */
-    border-radius: 5px; /* Округлення кутів карточки */
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between; 
+    width: 170px; 
+    border: 1px solid var(--tg-theme-button-color); 
+    padding: 15px; 
+    border-radius: 5px; 
 }
 
-/* Стилі для контейнера зображення товару */
 .img {
-    width: 100%; /* Заповнення всієї ширини контейнера */
-    height: 150px; /* Збільшення висоти контейнера */
-    margin: 0 auto; /* Вирівнювання по центру */
-    background: var(--primary-color); /* Фоновий колір контейнера */
+    width: 100%; 
+    height: 150px; 
+    margin: 0 auto; 
+    background: var(--primary-color); 
 }
 
-/* Стилі для фото товару */
 .img img {
-    width: auto; /* Автоматична ширина зображення */
-    height: 100%; /* Заповнення всієї висоти контейнера */
-    object-fit: contain; /* Зображення повністю поміщається в контейнер */
+    width: auto; 
+    height: 100%; 
+    object-fit: contain; 
 }
 
 
-/* Стилі для заголовків товару */
 .title {
-    text-align: center; /* Вирівнювання тексту по центру */
-    font-weight: bold; /* Товщина шрифту жирна */
-    font-size: 1.2em; /* Збільшений розмір шрифту */
+    text-align: center; 
+    font-weight: bold; 
+    font-size: 1.2em; 
 }
 
 
-/* Стилі для першого слова в заголовку */
 .title span:first-child {
-    font-weight: bold; /* Жирний шрифт */
-    font-size: 1.2em; /* Більший розмір шрифту */
+    font-weight: bold; 
+    font-size: 1.2em; 
 }
 
 
-
-/* Стилі для опису товару */
 .description {
-    font-size: 0.7em; /* Зменшення розміру шрифту */
-    margin-bottom: 10px; /* Відступ між заголовком і ціною */
+    font-size: 0.7em; 
+    margin-bottom: 10px; 
 }
 
-
-/* Стилі для кнопки "Додати в корзину" */
 .add-btn {
-    width: 100%; /* Заповнення всієї ширини */
-    border-radius: 5px; /* Округлення кутів кнопки */
-    background-color: rgba(82, 136, 193, 0.2); /* Прозорий фон з кольором rgba(82, 136, 193, 255) */
-    border: 1px solid var(--tg-theme-button-color); /* Обводка з таким самим кольором і товщиною, як у карточок */
-    color: white; /* Колір тексту білий */
-    font-weight: bold; /* Товщина шрифту жирна */
+    width: 100%; 
+    border-radius: 5px; 
+    background-color: rgba(82, 136, 193, 0.2); 
+    border: 1px solid var(--tg-theme-button-color); 
+    color: white; 
+    font-weight: bold; 
 }
 .added {
     background-color: green;
@@ -71,14 +62,14 @@
     border: 1px solid var(--tg-theme-button-color);
     padding: 15px;
     border-radius: 5px;
-    margin-bottom: 20px; /* Відступ між карточками товарів */
+    margin-bottom: 20px; 
 }
 
 .product .description {
-    margin-bottom: 10px; /* Відступ між заголовком і ціною */
+    margin-bottom: 10px; 
     text-align: center;
 }
 
 .price {
-    text-align: center; /* Вирівнювання тексту по центру */
+    text-align: center; 
 }
