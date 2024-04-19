@@ -8,12 +8,10 @@ const Header = () => {
     const { user, onClose } = useTelegram();
     const location = useLocation();
 
-    // Перевірка, чи ми на головній сторінці
     const isHomePage = location.pathname === '/';
 
-    // Відображення заголовка тільки на головній сторінці
     if (!isHomePage) {
-        return null; // Якщо не на головній сторінці, повертаємо null, щоб не відображати Header
+        return null; 
     }
 
     return (
