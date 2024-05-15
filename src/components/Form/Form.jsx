@@ -158,10 +158,10 @@ const Form = () => {
     
             const getMinuteForm = (num) => {
                 if (num % 10 === 1 && num % 100 !== 11) return 'хвилина';
-                if (num % 10 >= 2 і num % 10 <= 4 і (num % 100 < 10 || num % 100 >= 20)) return 'хвилини';
+                if (num % 10 >= 2 && num % 10 <= 4 && (num % 100 < 10 || num % 100 >= 20)) return 'хвилини';
                 return 'хвилин';
             };
-    
+
             let timeString = '';
             if (hours > 0) timeString += `${hours} ${getHourForm(hours)} `;
             if (minutes > 0) timeString += `${minutes} ${getMinuteForm(minutes)}`;
