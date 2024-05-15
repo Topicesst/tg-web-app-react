@@ -158,7 +158,7 @@ const Form = () => {
     
             const getMinuteForm = (num) => {
                 if (num % 10 === 1 && num % 100 !== 11) return 'хвилина';
-                if (num % 10 >= 2 && num % 10 <= 4 && (num % 100 < 10 || num % 100 >= 20)) return 'хвилини';
+                if (num % 10 >= 2 і num % 10 <= 4 і (num % 100 < 10 || num % 100 >= 20)) return 'хвилини';
                 return 'хвилин';
             };
     
@@ -236,8 +236,12 @@ const Form = () => {
                     <button type="button" onClick={() => setShowMap(false)}>Закрити карту</button>
                 </div>
             )}
-            <div>Ціна доставки: {calculateDeliveryPrice()}</div>
-            <div>Приблизний час доставки: {calculateDeliveryTime()}</div>
+            {deliveryMethod === 'courier' && (
+                <>
+                    <div>Ціна доставки: {calculateDeliveryPrice()}</div>
+                    <div>Приблизний час доставки: {calculateDeliveryTime()}</div>
+                </>
+            )}
             {deliveryMethod === 'pickup' && (
                 <div>Адреса для самовивозу: вулиця Руська, 209-Б, Чернівці, Чернівецька область, Україна</div>
             )}
@@ -246,4 +250,3 @@ const Form = () => {
 };
 
 export default Form;
-
