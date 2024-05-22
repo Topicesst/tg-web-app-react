@@ -136,7 +136,7 @@ const Form = () => {
         } else if (selectedLocation && deliveryMethod === 'courier') {
             const distance = calculateDistance(48.281255389712804, 25.97772702722112, selectedLocation.lat, selectedLocation.lng);
             const deliveryPrice = 20 + distance * 1;
-            return `${deliveryPrice.toFixed(2)} грн`;
+            return `${deliveryPrice.toFixed(2)}`;
         }
         return 'Не вибрано місцезнаходження';
     };
